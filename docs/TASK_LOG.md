@@ -237,3 +237,43 @@ GitHub：
 GitHub：
 
 - 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-26：阶段 2.2.1 - 代码结构复查与简化重构
+
+目标：
+
+- 检查前面代码是否出现职责堆叠、重复逻辑和不必要复杂度。
+- 在不改变功能的前提下简化前端和后端结构。
+
+操作：
+
+- 新增 `src/config.ts`，集中管理 API endpoint。
+- 新增 `src/lib/api.ts`，集中处理 JSON 请求和错误消息。
+- 新增 `src/hooks/useAsyncResource.ts`，复用异步加载、取消和错误状态逻辑。
+- 新增 `src/hooks/useEpisode.ts`。
+- 新增 `src/hooks/useRadioContext.ts`。
+- 新增 `src/hooks/useClock.ts`。
+- 新增 `src/hooks/useTranscriptScroll.ts`。
+- 新增 `src/hooks/usePlayerController.ts`，集中播放器音频、进度、波形和语音控制。
+- 简化 `src/App.tsx`，保留应用状态编排和页面组合。
+- 简化 `server/index.js`，将连续路由判断改为路由表。
+- 集中后端 JSON/CORS header，减少重复响应代码。
+
+验证：
+
+- `npm run build` 成功。
+- 重构后的 API 在临时端口 `8789` 验证通过：
+  - `/api/health` 返回 200。
+  - `/api/episodes/pilot` 返回 200。
+  - `/api/context` 返回 200。
+  - `/api/context/summary` 返回 200。
+
+结论：
+
+- `App.tsx` 不再堆叠 fetch、音频、波形、时钟和字幕滚动逻辑。
+- 后端新增接口时只需要扩展路由表。
+- 当前重构没有改变用户可见功能。
+
+GitHub：
+
+- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
