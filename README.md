@@ -37,3 +37,23 @@
 - [复现方案](docs/REPLICATION_PLAN.md)
 - [任务日志](docs/TASK_LOG.md)
 
+## 本地运行
+
+当前已完成阶段 1.1：静态播放器 Demo 骨架。
+
+```bash
+npm install
+npm run dev
+```
+
+然后打开：
+
+```txt
+http://127.0.0.1:5173/
+```
+
+构建验证：
+
+```bash
+npm run build
+```

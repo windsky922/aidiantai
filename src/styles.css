@@ -1,0 +1,365 @@
+:root {
+  color-scheme: dark;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #07080d;
+  color: #f7f7f7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(42, 48, 78, 0.58), transparent 44%),
+    linear-gradient(180deg, #11131b 0%, #06070b 100%);
+}
+
+.fluid {
+  position: absolute;
+  width: 68vmin;
+  height: 68vmin;
+  border-radius: 999px;
+  filter: blur(112px) saturate(1.18);
+  opacity: 0.58;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.fluid-blue {
+  background: #4667d8;
+  transform: translate(-22vmin, -16vmin);
+  animation: drift-blue 26s ease-in-out infinite;
+}
+
+.fluid-violet {
+  background: #b450ba;
+  transform: translate(20vmin, 18vmin);
+  animation: drift-violet 31s ease-in-out infinite;
+}
+
+.fluid-rose {
+  width: 38vmin;
+  height: 38vmin;
+  background: #e6a0b8;
+  transform: translate(8vmin, -10vmin);
+  animation: drift-rose 38s ease-in-out infinite;
+}
+
+.noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.65) 0.6px, transparent 0.7px);
+  background-size: 9px 9px;
+  pointer-events: none;
+}
+
+.device {
+  position: relative;
+  z-index: 1;
+  width: min(430px, calc(100vw - 32px));
+  height: min(780px, calc(100vh - 32px));
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 26px;
+  background: rgba(249, 249, 246, 0.98);
+  color: #141418;
+  box-shadow:
+    0 34px 80px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  padding: 8px;
+  background: #0b0d12;
+}
+
+.tab {
+  height: 34px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.58);
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.tab.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.hero {
+  height: 238px;
+  padding: 24px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.08), transparent 34%),
+    linear-gradient(180deg, #12131a 0%, #1a1b22 100%);
+}
+
+.host-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: start;
+}
+
+.host-mark {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #f3f1e9, #8f97c6);
+  color: #11131a;
+  font-weight: 800;
+  box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.5);
+}
+
+.host-row h1,
+.episode-meta h2,
+.info-panel h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.host-row h1 {
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.host-row p {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 13px;
+}
+
+.host-row time {
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #8c8c94;
+}
+
+.live-dot.live {
+  background: #8ee36e;
+  box-shadow: 0 0 18px rgba(142, 227, 110, 0.8);
+}
+
+.wave {
+  display: block;
+  width: 100%;
+  height: 112px;
+  margin-top: 28px;
+}
+
+.panel {
+  flex: 1;
+  min-height: 0;
+  padding: 18px;
+}
+
+.player-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.episode-meta {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #77757d;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.episode-meta h2,
+.info-panel h2 {
+  font-size: 26px;
+  line-height: 1.05;
+}
+
+.episode-meta p:last-child {
+  margin: 6px 0 0;
+  color: #77757d;
+  font-size: 14px;
+}
+
+.play-button {
+  width: 78px;
+  height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: #11131a;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.trackline {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  gap: 10px;
+  align-items: center;
+  margin: 18px 0;
+  color: #77757d;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.trackline input {
+  width: 100%;
+  accent-color: #11131a;
+}
+
+.transcript {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle, rgba(0, 0, 0, 0.08) 0.5px, transparent 0.7px) 0 0 / 12px 12px,
+    #f0f0ec;
+  scroll-behavior: smooth;
+}
+
+.transcript::-webkit-scrollbar {
+  width: 0;
+}
+
+.turn {
+  margin-bottom: 18px;
+  opacity: 0.42;
+  transform: translateY(0);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.turn.active {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.turn.past {
+  opacity: 0.66;
+}
+
+.turn div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+  color: #77757d;
+  font-size: 12px;
+}
+
+.turn strong {
+  color: #19191d;
+}
+
+.turn p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.info-panel {
+  padding: 26px;
+}
+
+.info-panel ul {
+  padding: 0;
+  margin: 22px 0 0;
+  list-style: none;
+}
+
+.info-panel li {
+  padding: 14px 0;
+  border-top: 1px solid rgba(20, 20, 24, 0.12);
+  color: #4b4a52;
+  line-height: 1.45;
+}
+
+@keyframes drift-blue {
+  50% {
+    transform: translate(18vmin, -8vmin) scale(1.08);
+  }
+}
+
+@keyframes drift-violet {
+  50% {
+    transform: translate(-20vmin, 14vmin) scale(0.94);
+  }
+}
+
+@keyframes drift-rose {
+  50% {
+    transform: translate(22vmin, 12vmin) scale(1.18);
+  }
+}
+
+@media (max-width: 460px) {
+  .device {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .hero {
+    height: 224px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fluid,
+  .turn {
+    animation: none;
+    transition: none;
+  }
+}
+
