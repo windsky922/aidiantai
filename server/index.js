@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { readContext } from './context.js';
+import { buildCodexPrompt, buildCodexPromptSummary } from './codexPrompt.js';
 
 const PORT = Number(process.env.API_PORT || 8787);
 const HOST = process.env.API_HOST || '127.0.0.1';
@@ -39,6 +40,8 @@ const routes = {
     const context = await readContext();
     return context.summary;
   },
+  '/api/codex/prompt': buildCodexPrompt,
+  '/api/codex/prompt/summary': buildCodexPromptSummary,
 };
 
 const server = createServer(async (request, response) => {

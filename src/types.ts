@@ -43,3 +43,12 @@ export type RadioContext = {
   summary: ContextSummary;
 };
 
+export type CodexPromptSummary = {
+  target: string;
+  task: string;
+  instructionCount: number;
+  candidateSongCount: number;
+  playlistSummary: ContextSummary;
+  outputKeys: string[];
+};
+

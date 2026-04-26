@@ -1,9 +1,11 @@
-import type { RadioContext, TabId } from '../types';
+import type { CodexPromptSummary, RadioContext, TabId } from '../types';
 
 type InfoPanelProps = {
   activeTab: Exclude<TabId, 'player'>;
   radioContext: RadioContext | null;
   contextError: string | null;
+  promptSummary: CodexPromptSummary | null;
+  promptError: string | null;
 };
 
 const copy = {
@@ -45,9 +47,21 @@ const contextItems = (radioContext: RadioContext | null, contextError: string | 
   ];
 };
 
-export function InfoPanel({ activeTab, radioContext, contextError }: InfoPanelProps) {
+const promptItems = (promptSummary: CodexPromptSummary | null, promptError: string | null) => {
+  if (promptError) return [`Codex prompt API error: ${promptError}`];
+  if (!promptSummary) return ['Loading Codex prompt summary from /api/codex/prompt/summary.'];
+
+  return [
+    `Target: ${promptSummary.target}.`,
+    `Task: ${promptSummary.task}`,
+    `${promptSummary.instructionCount} instructions and ${promptSummary.candidateSongCount} candidate songs prepared.`,
+    `Output keys: ${promptSummary.outputKeys.join(', ')}.`,
+  ];
+};
+
+export function InfoPanel({ activeTab, radioContext, contextError, promptSummary, promptError }: InfoPanelProps) {
   const content = copy[activeTab];
-  const items = activeTab === 'profile' ? contextItems(radioContext, contextError) : content.items;
+  const items = activeTab === 'profile' ? contextItems(radioContext, contextError) : promptItems(promptSummary, promptError);
 
   return (
     <section className="panel info-panel">

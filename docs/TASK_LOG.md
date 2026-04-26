@@ -277,3 +277,49 @@ GitHub：
 GitHub：
 
 - 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-26：阶段 2.3 - Codex prompt 组装接口
+
+目标：
+
+- 先建立发给 Codex 的 prompt 结构，不直接调用 Codex。
+- 让输入质量可检查，避免过早接入真实 AI 调用导致复杂度上升。
+- 将“每次任务先判断维护方式、必要时重构、长上下文用 context-mode”写入项目约定。
+
+实现前判断：
+
+- 当前已有 `context` API 和 episode API，缺少的是把这些原料组装成 Codex 可消费的任务输入。
+- 最小实现是新增 prompt builder 和只读 API，不引入 SDK、不加真实调用、不增加状态写入。
+- Settings 页只显示摘要，避免把大段 prompt 塞进 UI。
+
+操作：
+
+- 新增 `server/codexPrompt.js`。
+- 新增 `/api/codex/prompt`，返回完整结构化 prompt。
+- 新增 `/api/codex/prompt/summary`，返回 prompt 摘要。
+- 新增 `src/hooks/useCodexPromptSummary.ts`。
+- 修改 `src/config.ts`，增加 prompt summary endpoint。
+- 修改 `src/types.ts`，新增 `CodexPromptSummary`。
+- 修改 `src/components/InfoPanel.tsx`，Settings 页展示 Codex prompt 准备情况。
+- 修改 `src/App.tsx`，加载 prompt summary。
+- 修改 `README.md`，补充维护规则和 prompt API 地址。
+
+验证：
+
+- `npm run build` 成功。
+- 新接口在临时端口 `8790` 验证通过：
+  - `/api/codex/prompt/summary` 返回 200。
+  - `/api/codex/prompt` 返回 200。
+- prompt summary 确认：
+  - `target=Codex`。
+  - `candidateSongCount=3`。
+  - `outputKeys=episodeTitle,host,djSay,songCandidates,turns`。
+
+结论：
+
+- Codex 调用前的输入组装层已经建立。
+- 下一步适合做阶段 2.4：把 prompt 输出 schema 与前端 `Episode` 类型进一步对齐，增加生成结果校验入口。
+
+GitHub：
+
+- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。

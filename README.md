@@ -31,6 +31,8 @@
 - 每次实现一个明确任务后提交 Git。
 - 每次提交后推送到 GitHub 仓库。
 - 功能实现优先小步推进，先可运行，再逐步接入外部 API。
+- 每次开发前先判断最小可行改动、重复代码、职责边界和是否需要重构。
+- 如果输出、源码或日志上下文过长，优先使用 context-mode MCP 做索引、搜索和摘要，避免直接塞入大段上下文。
 
 ## 文档
 
@@ -71,6 +73,8 @@ http://127.0.0.1:8787/api/health
 http://127.0.0.1:8787/api/episodes/pilot
 http://127.0.0.1:8787/api/context
 http://127.0.0.1:8787/api/context/summary
+http://127.0.0.1:8787/api/codex/prompt
+http://127.0.0.1:8787/api/codex/prompt/summary
 ```
 
 ## 当前数据入口

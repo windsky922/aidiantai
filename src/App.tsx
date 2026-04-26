@@ -6,6 +6,7 @@ import { LoadingPanel } from './components/LoadingPanel';
 import { PlayerHeader } from './components/PlayerHeader';
 import { PlayerPanel } from './components/PlayerPanel';
 import { Tabs } from './components/Tabs';
+import { useCodexPromptSummary } from './hooks/useCodexPromptSummary';
 import { useClock } from './hooks/useClock';
 import { useEpisode } from './hooks/useEpisode';
 import { usePlayerController } from './hooks/usePlayerController';
@@ -51,6 +52,7 @@ function RadioApp({ episode }: RadioAppProps) {
   const [activeTab, setActiveTab] = useState<TabId>('player');
   const clock = useClock();
   const contextResource = useRadioContext();
+  const promptResource = useCodexPromptSummary();
   const transcriptRef = useRef<HTMLDivElement | null>(null);
   const player = usePlayerController(episode);
 
@@ -58,6 +60,8 @@ function RadioApp({ episode }: RadioAppProps) {
 
   const radioContext = contextResource.status === 'ready' ? contextResource.data : null;
   const contextError = contextResource.status === 'error' ? contextResource.error : null;
+  const promptSummary = promptResource.status === 'ready' ? promptResource.data : null;
+  const promptError = promptResource.status === 'error' ? promptResource.error : null;
 
   return (
     <AppStage>
@@ -76,7 +80,13 @@ function RadioApp({ episode }: RadioAppProps) {
             onTogglePlayback={player.togglePlayback}
           />
         ) : (
-          <InfoPanel activeTab={activeTab} radioContext={radioContext} contextError={contextError} />
+          <InfoPanel
+            activeTab={activeTab}
+            radioContext={radioContext}
+            contextError={contextError}
+            promptSummary={promptSummary}
+            promptError={promptError}
+          />
         )}
       </section>
     </AppStage>
