@@ -8,9 +8,10 @@ import { PlayerPanel } from './components/PlayerPanel';
 import { Tabs } from './components/Tabs';
 import { parseEpisode } from './lib/episode';
 import { getTurnEnd } from './lib/time';
-import type { Episode, EpisodeResult, TabId } from './types';
+import type { Episode, EpisodeResult, RadioContext, TabId } from './types';
 
 const EPISODE_ENDPOINT = '/api/episodes/pilot';
+const CONTEXT_ENDPOINT = '/api/context';
 
 export function App() {
   const [episodeResult, setEpisodeResult] = useState<EpisodeResult | null>(null);
@@ -72,6 +73,8 @@ function RadioApp({ episode }: RadioAppProps) {
   const [time, setTime] = useState(0);
   const [clock, setClock] = useState('');
   const [activeTab, setActiveTab] = useState<TabId>('player');
+  const [radioContext, setRadioContext] = useState<RadioContext | null>(null);
+  const [contextError, setContextError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const waveFrameRef = useRef<number | null>(null);
@@ -97,6 +100,27 @@ function RadioApp({ episode }: RadioAppProps) {
     updateClock();
     const timer = window.setInterval(updateClock, 30_000);
     return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadContext() {
+      try {
+        const response = await fetch(CONTEXT_ENDPOINT);
+        if (!response.ok) throw new Error(`Context API returned ${response.status}`);
+        const payload = (await response.json()) as RadioContext;
+        if (!cancelled) setRadioContext(payload);
+      } catch (error) {
+        if (!cancelled) setContextError(error instanceof Error ? error.message : 'Unable to load context.');
+      }
+    }
+
+    loadContext();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -260,7 +284,7 @@ function RadioApp({ episode }: RadioAppProps) {
             onTogglePlayback={togglePlayback}
           />
         ) : (
-          <InfoPanel activeTab={activeTab} />
+          <InfoPanel activeTab={activeTab} radioContext={radioContext} contextError={contextError} />
         )}
       </section>
     </AppStage>

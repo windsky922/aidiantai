@@ -1,0 +1,33 @@
+[
+  {
+    "title": "If",
+    "artist": "Bread",
+    "playlist": "Pilot Episode",
+    "year": 1971,
+    "mood": ["gentle", "nostalgic", "late-night"],
+    "scene": ["night", "rest"],
+    "source": "itunes-preview",
+    "url": "https://music.apple.com/us/album/if/343403822?i=343403886"
+  },
+  {
+    "title": "Sample Focus Track",
+    "artist": "Local Library",
+    "playlist": "Work Flow",
+    "year": 2026,
+    "mood": ["focused", "steady"],
+    "scene": ["work", "coding"],
+    "source": "local-placeholder",
+    "url": ""
+  },
+  {
+    "title": "Sample Memory Track",
+    "artist": "Local Library",
+    "playlist": "Fourteen Years",
+    "year": 2014,
+    "mood": ["memory", "warm"],
+    "scene": ["evening", "review"],
+    "source": "local-placeholder",
+    "url": ""
+  }
+]
+

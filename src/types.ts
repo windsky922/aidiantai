@@ -27,3 +27,19 @@ export type EpisodeResult =
       error: string;
     };
 
+export type ContextSummary = {
+  songCount: number;
+  artistCount: number;
+  yearRange: [number, number] | null;
+  moods: string[];
+  scenes: string[];
+};
+
+export type RadioContext = {
+  taste: string;
+  routines: string;
+  moodRules: string;
+  playlists: unknown[];
+  summary: ContextSummary;
+};
+

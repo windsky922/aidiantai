@@ -200,3 +200,40 @@ GitHub：
 GitHub：
 
 - 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-26：阶段 2.2 - 用户上下文文件和 context API
+
+目标：
+
+- 建立 Codex 后续需要读取的用户上下文文件。
+- 为本地 API 增加 context 读取能力。
+- 让前端 Profile 页面展示真实 context 摘要，而不是静态说明。
+
+操作：
+
+- 新增 `data/taste.md`。
+- 新增 `data/routines.md`。
+- 新增 `data/mood-rules.md`。
+- 新增 `data/playlists.json`。
+- 新增 `server/context.js`，读取上下文文件并生成摘要。
+- 修改 `server/index.js`，新增 `/api/context` 和 `/api/context/summary`。
+- 修改 `src/types.ts`，新增 `RadioContext` 和 `ContextSummary` 类型。
+- 修改 `src/App.tsx`，启动时读取 `/api/context`。
+- 修改 `src/components/InfoPanel.tsx`，Profile 页展示 context 摘要。
+- 修改 `README.md`，记录用户上下文文件和 API 地址。
+
+验证：
+
+- `npm run build` 成功。
+- 新版 API 在临时端口 `8788` 验证 `/api/context` 返回 200。
+- 当前 `8787` 被旧 API 进程占用；重启 `npm run dev` 后会加载新版 `/api/context/summary`。
+
+结论：
+
+- 项目已经具备最小用户上下文层。
+- Codex 后续可以基于 `taste.md`、`routines.md`、`mood-rules.md` 和 `playlists.json` 生成节目。
+- 下一步适合做阶段 2.3：创建 Codex prompt 组装接口，先返回结构化 prompt，不直接调用 Codex。
+
+GitHub：
+
+- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。

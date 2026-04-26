@@ -39,7 +39,7 @@
 
 ## 本地运行
 
-当前已完成阶段 2.1：静态播放器 Demo 已通过本地 Node.js API 读取 episode 数据。
+当前已完成阶段 2.2：本地 Node.js API 已能读取用户上下文文件，Profile 页会展示 context 摘要。
 
 ```bash
 npm install
@@ -69,6 +69,8 @@ API 地址：
 ```txt
 http://127.0.0.1:8787/api/health
 http://127.0.0.1:8787/api/episodes/pilot
+http://127.0.0.1:8787/api/context
+http://127.0.0.1:8787/api/context/summary
 ```
 
 ## 当前数据入口
@@ -91,3 +93,14 @@ src/data/pilotEpisode.json
 - `src/registerServiceWorker.ts`
 
 service worker 使用 network-first 策略，优先拿最新资源，离线时回退到缓存。
+
+## 用户上下文
+
+Codex 后续生成节目时会优先读取这些本地上下文文件：
+
+- `data/taste.md`
+- `data/routines.md`
+- `data/mood-rules.md`
+- `data/playlists.json`
+
+这些文件会由本地 API 组装为 `/api/context`，再作为 Codex 生成节目策划、推荐理由和 DJ 串场的输入。

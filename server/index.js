@@ -1,5 +1,6 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
+import { readContext } from './context.js';
 
 const PORT = Number(process.env.API_PORT || 8787);
 const HOST = process.env.API_HOST || '127.0.0.1';
@@ -65,6 +66,17 @@ const server = createServer(async (request, response) => {
       return;
     }
 
+    if (url.pathname === '/api/context') {
+      sendJson(response, 200, await readContext());
+      return;
+    }
+
+    if (url.pathname === '/api/context/summary') {
+      const context = await readContext();
+      sendJson(response, 200, context.summary);
+      return;
+    }
+
     sendNotFound(response);
   } catch (error) {
     sendJson(response, 500, {
@@ -76,4 +88,3 @@ const server = createServer(async (request, response) => {
 server.listen(PORT, HOST, () => {
   console.log(`API server listening on http://${HOST}:${PORT}`);
 });
-
