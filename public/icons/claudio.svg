@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Codex AI Radio</title>
+  <desc id="desc">A dark rounded radio tile with a glowing C monogram and waveform.</desc>
+  <defs>
+    <linearGradient id="bg" x1="80" y1="48" x2="432" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#202334"/>
+      <stop offset="0.55" stop-color="#11131a"/>
+      <stop offset="1" stop-color="#06070b"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="156" y1="128" x2="366" y2="384" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f6f3e8"/>
+      <stop offset="0.5" stop-color="#a8b7ff"/>
+      <stop offset="1" stop-color="#df9bc1"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <circle cx="144" cy="120" r="92" fill="#496cff" opacity="0.18"/>
+  <circle cx="382" cy="364" r="128" fill="#bb5cc1" opacity="0.18"/>
+  <path d="M320 174c-18-16-40-24-66-24-62 0-106 47-106 106s44 106 106 106c27 0 51-9 69-27" fill="none" stroke="url(#mark)" stroke-width="42" stroke-linecap="round"/>
+  <path d="M155 404h24m28 0h42m28 0h80" stroke="#f6f3e8" stroke-width="18" stroke-linecap="round" opacity="0.72"/>
+  <path d="M154 104h204" stroke="#f6f3e8" stroke-width="14" stroke-linecap="round" opacity="0.28"/>
+</svg>
+

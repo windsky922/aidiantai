@@ -39,7 +39,7 @@
 
 ## 本地运行
 
-当前已完成阶段 1.3：静态播放器 Demo 已组件化，并加入 episode 数据校验与错误态。
+当前已完成阶段 1.4：静态播放器 Demo 已组件化、加入 episode 数据校验与错误态，并补齐 PWA 外壳。
 
 ```bash
 npm install
@@ -67,3 +67,14 @@ src/data/pilotEpisode.json
 ```
 
 前端会读取这个 JSON 渲染主播、节目标题、歌曲 preview 和字幕时间轴。后续本地服务或 Codex 只要生成同样结构的数据，就可以替换当前静态节目。数据进入播放器前会先经过基础校验，避免坏数据直接破坏页面。
+
+## PWA 支持
+
+当前已加入：
+
+- `public/manifest.webmanifest`
+- `public/icons/claudio.svg`
+- `public/sw.js`
+- `src/registerServiceWorker.ts`
+
+service worker 使用 network-first 策略，优先拿最新资源，离线时回退到缓存。

@@ -1,0 +1,20 @@
+{
+  "name": "Codex AI Radio",
+  "short_name": "AI Radio",
+  "description": "A local-first personal AI radio player powered by Codex context.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07080d",
+  "theme_color": "#0b0d12",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/claudio.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
+

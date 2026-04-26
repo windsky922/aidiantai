@@ -127,3 +127,39 @@ GitHub：
 GitHub：
 
 - 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-26：阶段 1.4 - PWA 外壳和离线 shell 缓存
+
+目标：
+
+- 补齐作者原项目中提到的 PWA 形态。
+- 为播放器加入可安装应用的基础元信息。
+- 添加 service worker，为后续离线可用和本地优先体验做准备。
+
+操作：
+
+- 新增 `public/manifest.webmanifest`。
+- 新增 `public/icons/claudio.svg`。
+- 新增 `public/sw.js`。
+- 新增 `src/registerServiceWorker.ts`。
+- 修改 `src/main.tsx`，注册 service worker。
+- 修改 `index.html`，加入 manifest、图标、描述和新的页面标题。
+- 修改 `README.md`，记录 PWA 文件和缓存策略。
+- service worker 使用 network-first 策略，避免开发迭代时优先命中旧缓存。
+
+验证：
+
+- `npm run build` 成功。
+- `http://127.0.0.1:5173/` 返回 200。
+- `http://127.0.0.1:5173/manifest.webmanifest` 返回 200。
+- `http://127.0.0.1:5173/sw.js` 返回 200。
+- `http://127.0.0.1:5173/icons/claudio.svg` 返回 200。
+
+结论：
+
+- 静态播放器已具备 PWA 基础外壳。
+- 下一步适合做阶段 2.1：建立本地 Node.js 服务骨架，由前端从 `/api/episodes/pilot` 读取节目数据。
+
+GitHub：
+
+- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
