@@ -2,17 +2,56 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AppStage } from './components/AppStage';
 import { ErrorPanel } from './components/ErrorPanel';
 import { InfoPanel } from './components/InfoPanel';
+import { LoadingPanel } from './components/LoadingPanel';
 import { PlayerHeader } from './components/PlayerHeader';
 import { PlayerPanel } from './components/PlayerPanel';
 import { Tabs } from './components/Tabs';
-import pilotEpisode from './data/pilotEpisode.json';
 import { parseEpisode } from './lib/episode';
 import { getTurnEnd } from './lib/time';
-import type { Episode, TabId } from './types';
+import type { Episode, EpisodeResult, TabId } from './types';
 
-const episodeResult = parseEpisode(pilotEpisode);
+const EPISODE_ENDPOINT = '/api/episodes/pilot';
 
 export function App() {
+  const [episodeResult, setEpisodeResult] = useState<EpisodeResult | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadEpisode() {
+      try {
+        const response = await fetch(EPISODE_ENDPOINT);
+        if (!response.ok) {
+          throw new Error(`Episode API returned ${response.status}`);
+        }
+        const payload: unknown = await response.json();
+        const parsed = parseEpisode(payload);
+        if (!cancelled) setEpisodeResult(parsed);
+      } catch (error) {
+        if (!cancelled) {
+          setEpisodeResult({
+            ok: false,
+            error: error instanceof Error ? error.message : 'Unable to load episode data.',
+          });
+        }
+      }
+    }
+
+    loadEpisode();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (!episodeResult) {
+    return (
+      <AppStage>
+        <LoadingPanel />
+      </AppStage>
+    );
+  }
+
   if (!episodeResult.ok) {
     return (
       <AppStage>

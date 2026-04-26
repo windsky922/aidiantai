@@ -340,6 +340,12 @@ input {
   line-height: 1.45;
 }
 
+.status-copy {
+  margin: 20px 0 0;
+  color: #4b4a52;
+  line-height: 1.45;
+}
+
 @keyframes drift-blue {
   50% {
     transform: translate(18vmin, -8vmin) scale(1.08);

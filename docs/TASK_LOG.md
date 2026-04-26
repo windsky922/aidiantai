@@ -126,7 +126,7 @@ GitHub：
 
 GitHub：
 
-- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
 
 ## 2026-04-26：阶段 1.4 - PWA 外壳和离线 shell 缓存
 
@@ -159,6 +159,43 @@ GitHub：
 
 - 静态播放器已具备 PWA 基础外壳。
 - 下一步适合做阶段 2.1：建立本地 Node.js 服务骨架，由前端从 `/api/episodes/pilot` 读取节目数据。
+
+GitHub：
+
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-26：阶段 2.1 - 本地 Node.js API 服务骨架
+
+目标：
+
+- 建立本地 Node.js 服务骨架。
+- 让前端不再直接 import episode JSON，而是通过 API 获取节目数据。
+- 为后续 Codex 生成 episode、TTS 合成和音乐 API 编排建立后端入口。
+
+操作：
+
+- 新增 `server/index.js`，使用 Node 内置 `http` 模块实现轻量 API。
+- 新增 `scripts/dev.js`，让 `npm run dev` 同时启动 API 服务和 Vite 前端。
+- 修改 `package.json`，新增 `dev:api`、`dev:web`，并调整 `dev`。
+- 修改 `vite.config.ts`，将 `/api` 代理到 `http://127.0.0.1:8787`。
+- 修改 `src/App.tsx`，启动时从 `/api/episodes/pilot` 拉取 episode 数据。
+- 新增 `src/components/LoadingPanel.tsx`，显示 API 加载状态。
+- 修改 `.gitignore`，忽略本地开发日志。
+- 修改 `README.md`，记录 API 运行方式和接口地址。
+
+验证：
+
+- `npm run build` 成功。
+- `http://127.0.0.1:8787/api/health` 返回 200。
+- `http://127.0.0.1:8787/api/episodes/pilot` 返回 200。
+- `http://127.0.0.1:5173/api/episodes/pilot` 经 Vite 代理返回 200。
+- `http://127.0.0.1:5173/` 返回 200。
+
+结论：
+
+- 前端已经切换为 API 数据源。
+- 本地服务已具备后续接入 Codex 的最小接口位置。
+- 下一步适合做阶段 2.2：建立 `data/` 用户上下文文件和后端 context 读取接口。
 
 GitHub：
 

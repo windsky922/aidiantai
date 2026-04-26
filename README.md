@@ -39,7 +39,7 @@
 
 ## 本地运行
 
-当前已完成阶段 1.4：静态播放器 Demo 已组件化、加入 episode 数据校验与错误态，并补齐 PWA 外壳。
+当前已完成阶段 2.1：静态播放器 Demo 已通过本地 Node.js API 读取 episode 数据。
 
 ```bash
 npm install
@@ -58,6 +58,19 @@ http://127.0.0.1:5173/
 npm run build
 ```
 
+单独启动 API：
+
+```bash
+npm run dev:api
+```
+
+API 地址：
+
+```txt
+http://127.0.0.1:8787/api/health
+http://127.0.0.1:8787/api/episodes/pilot
+```
+
 ## 当前数据入口
 
 节目数据位于：
@@ -66,7 +79,7 @@ npm run build
 src/data/pilotEpisode.json
 ```
 
-前端会读取这个 JSON 渲染主播、节目标题、歌曲 preview 和字幕时间轴。后续本地服务或 Codex 只要生成同样结构的数据，就可以替换当前静态节目。数据进入播放器前会先经过基础校验，避免坏数据直接破坏页面。
+本地 API 会读取这个 JSON 并通过 `/api/episodes/pilot` 返回给前端。后续 Codex 只要生成同样结构的数据，就可以替换当前静态节目。数据进入播放器前会先经过基础校验，避免坏数据直接破坏页面。
 
 ## PWA 支持
 
