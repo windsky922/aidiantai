@@ -90,6 +90,11 @@ input {
     0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
+.error-device {
+  height: auto;
+  min-height: 300px;
+}
+
 .tabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -325,6 +330,16 @@ input {
   line-height: 1.45;
 }
 
+.error-copy {
+  margin: 20px 0 0;
+  padding: 14px;
+  border: 1px solid rgba(143, 36, 36, 0.18);
+  border-radius: 12px;
+  background: rgba(143, 36, 36, 0.08);
+  color: #713131;
+  line-height: 1.45;
+}
+
 @keyframes drift-blue {
   50% {
     transform: translate(18vmin, -8vmin) scale(1.08);
@@ -362,4 +377,3 @@ input {
     transition: none;
   }
 }
-

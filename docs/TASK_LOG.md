@@ -1,6 +1,6 @@
 # 任务日志
 
-本文件记录每次阶段任务、操作内容和 GitHub 同步情况。
+本文件记录每次阶段任务、操作内容和 GitHub 同步情况。后续新增任务必须按阶段时间线从旧到新追加。
 
 ## 2026-04-26：阶段 0 - 项目复现方案与仓库初始化
 
@@ -22,11 +22,11 @@
 - 第一阶段优先复现静态播放器 Demo。
 - 第二阶段改造成数据驱动节目。
 - 第三阶段接入本地 Node.js 服务。
-- 后续再接 Claude、TTS、音乐 API、天气、日程和长期记忆。
+- 后续再接 Codex、TTS、音乐 API、天气、日程和长期记忆。
 
 GitHub：
 
-- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
 
 ## 2026-04-26：阶段 1.1 - 前端项目骨架和静态播放器界面
 
@@ -34,7 +34,7 @@ GitHub：
 
 - 搭建 Vite + React + TypeScript 前端项目。
 - 先复现 Claudio 公开页面的核心播放器体验。
-- 不接后端、不接 Claude、不接 TTS API，先获得可运行的视觉和交互基线。
+- 不接后端、不接 Codex、不接 TTS API，先获得可运行的视觉和交互基线。
 
 操作：
 
@@ -61,14 +61,14 @@ GitHub：
 
 GitHub：
 
-- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
 
 ## 2026-04-26：阶段 1.2 - 抽离节目 JSON 数据模型
 
 目标：
 
 - 将写在 `src/App.tsx` 里的节目内容抽离成可替换 JSON。
-- 为后续 Claude 生成节目数据、本地服务返回节目数据打基础。
+- 为后续 Codex 生成节目数据、本地服务返回节目数据打基础。
 
 操作：
 
@@ -86,6 +86,43 @@ GitHub：
 
 - 播放器已经从写死组件内容升级为数据驱动。
 - 下一步适合做阶段 1.3：把播放器拆成组件，并为 episode 数据增加基础校验与错误态。
+
+GitHub：
+
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-26：阶段 1.3 - 组件拆分、数据校验和 Codex 目标修正
+
+目标：
+
+- 将播放器从单文件组件拆分为更清晰的 UI 组件。
+- 为 episode JSON 增加基础校验和错误态。
+- 修正项目目标：最终 AI 处理核心使用 Codex，而不是 Claude。
+
+操作：
+
+- 新增 `src/components/AppStage.tsx`。
+- 新增 `src/components/Tabs.tsx`。
+- 新增 `src/components/PlayerHeader.tsx`。
+- 新增 `src/components/PlayerPanel.tsx`。
+- 新增 `src/components/InfoPanel.tsx`。
+- 新增 `src/components/ErrorPanel.tsx`。
+- 新增 `src/lib/time.ts`，集中处理时间格式化和字幕结束时间。
+- 新增 `src/lib/episode.ts`，解析并校验 episode 数据。
+- 修改 `src/App.tsx`，只负责组装应用状态和各组件。
+- 修改 `README.md`、`docs/REPLICATION_PLAN.md`、`docs/TASK_LOG.md` 和前端文案，将目标 AI 核心改为 Codex。
+- 修改 `src/data/pilotEpisode.json`，将示例文案里的 Claude Code 改为 Codex。
+
+验证：
+
+- `npm run build` 成功。
+- `http://127.0.0.1:5173/` 返回 200。
+
+结论：
+
+- 播放器结构更适合继续扩展。
+- episode 数据已有基础防护，后续接本地服务或 Codex 输出时更稳。
+- 项目目标已统一为 Codex 驱动的个人 AI 电台。
 
 GitHub：
 

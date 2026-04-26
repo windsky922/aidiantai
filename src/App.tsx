@@ -1,32 +1,38 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AppStage } from './components/AppStage';
+import { ErrorPanel } from './components/ErrorPanel';
+import { InfoPanel } from './components/InfoPanel';
+import { PlayerHeader } from './components/PlayerHeader';
+import { PlayerPanel } from './components/PlayerPanel';
+import { Tabs } from './components/Tabs';
 import pilotEpisode from './data/pilotEpisode.json';
-import type { Episode, Speaker, Turn } from './types';
+import { parseEpisode } from './lib/episode';
+import { getTurnEnd } from './lib/time';
+import type { Episode, TabId } from './types';
 
-const toSpeaker = (speaker: string): Speaker => (speaker === 'You' ? 'You' : 'Claudio');
-
-const normalizeEpisode = (source: typeof pilotEpisode): Episode => ({
-  ...source,
-  turns: source.turns.map((turn) => ({
-    ...turn,
-    speaker: toSpeaker(turn.speaker),
-  })),
-});
-
-const episode = normalizeEpisode(pilotEpisode);
-
-const formatTime = (seconds: number) => {
-  const safe = Math.max(0, Math.floor(seconds));
-  return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2, '0')}`;
-};
-
-const getTurnEnd = (turns: Turn[], index: number, total: number) =>
-  turns[index + 1] ? turns[index + 1].start - 0.15 : total;
+const episodeResult = parseEpisode(pilotEpisode);
 
 export function App() {
+  if (!episodeResult.ok) {
+    return (
+      <AppStage>
+        <ErrorPanel error={episodeResult.error} />
+      </AppStage>
+    );
+  }
+
+  return <RadioApp episode={episodeResult.episode} />;
+}
+
+type RadioAppProps = {
+  episode: Episode;
+};
+
+function RadioApp({ episode }: RadioAppProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [time, setTime] = useState(0);
   const [clock, setClock] = useState('');
-  const [activeTab, setActiveTab] = useState<'player' | 'profile' | 'settings'>('player');
+  const [activeTab, setActiveTab] = useState<TabId>('player');
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const waveFrameRef = useRef<number | null>(null);
@@ -41,7 +47,7 @@ export function App() {
         const end = getTurnEnd(episode.turns, index, episode.duration);
         return time >= turn.start && time < end;
       }),
-    [time],
+    [episode.duration, episode.turns, time],
   );
 
   useEffect(() => {
@@ -73,7 +79,7 @@ export function App() {
       audioRef.current = audio;
     }
     return audioRef.current;
-  }, []);
+  }, [episode.songPreview]);
 
   const ensureAnalyser = useCallback(() => {
     const audio = ensureAudio();
@@ -108,7 +114,7 @@ export function App() {
     utterance.pitch = 0.82;
     utterance.volume = 0.86;
     window.speechSynthesis.speak(utterance);
-  }, []);
+  }, [episode.turns]);
 
   const drawWave = useCallback(() => {
     const canvas = canvasRef.current;
@@ -172,7 +178,7 @@ export function App() {
     return () => {
       if (timelineFrameRef.current) window.cancelAnimationFrame(timelineFrameRef.current);
     };
-  }, [isPlaying]);
+  }, [episode.duration, isPlaying]);
 
   const togglePlayback = async () => {
     ensureAnalyser();
@@ -199,121 +205,26 @@ export function App() {
   const progress = Math.min(100, (time / episode.duration) * 100);
 
   return (
-    <main className="stage">
-      <div className="fluid fluid-blue" />
-      <div className="fluid fluid-violet" />
-      <div className="fluid fluid-rose" />
-      <div className="noise" />
-
+    <AppStage>
       <section className="device" aria-label="Claudio FM player">
-        <nav className="tabs" aria-label="Views">
-          {(['player', 'profile', 'settings'] as const).map((tab) => (
-            <button
-              className={activeTab === tab ? 'tab active' : 'tab'}
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              type="button"
-            >
-              {tab}
-            </button>
-          ))}
-        </nav>
+        <Tabs activeTab={activeTab} onChange={setActiveTab} />
+        <PlayerHeader host={episode.host} isPlaying={isPlaying} clock={clock} canvasRef={canvasRef} />
 
-        <header className="hero">
-          <div className="host-row">
-            <div className="host-mark" aria-hidden="true">
-              C
-            </div>
-            <div>
-              <h1>{episode.host}</h1>
-              <p>
-                <span className={isPlaying ? 'live-dot live' : 'live-dot'} />
-                {isPlaying ? 'Speaking...' : 'Ready'}
-              </p>
-            </div>
-            <time>{clock}</time>
-          </div>
-          <canvas ref={canvasRef} className="wave" aria-label="Audio waveform" />
-        </header>
-
-        {activeTab === 'player' && (
-          <section className="panel player-panel">
-            <div className="episode-meta">
-              <div>
-                <p className="eyebrow">mmguo style demo</p>
-                <h2>{episode.title}</h2>
-                <p>{episode.subtitle}</p>
-              </div>
-              <button className="play-button" onClick={togglePlayback} type="button" aria-label="Play or pause">
-                {isPlaying ? 'Pause' : 'Play'}
-              </button>
-            </div>
-
-            <div className="trackline" aria-label="Playback progress">
-              <span>{formatTime(time)}</span>
-              <input
-                aria-label="Seek"
-                max={episode.duration}
-                min={0}
-                onChange={(event) => seek(Number(event.target.value))}
-                step={0.1}
-                type="range"
-                value={time}
-                style={{ '--progress': `${progress}%` } as React.CSSProperties}
-              />
-              <span>{formatTime(episode.duration)}</span>
-            </div>
-
-            <div className="transcript" ref={transcriptRef}>
-              {episode.turns.map((turn, index) => {
-                const end = getTurnEnd(episode.turns, index, episode.duration);
-                const active = time >= turn.start && time < end;
-                const past = time >= end;
-                return (
-                  <article
-                    className={`turn ${active ? 'active' : ''} ${past ? 'past' : ''}`}
-                    data-active-turn={active}
-                    key={`${turn.speaker}-${turn.start}`}
-                  >
-                    <div>
-                      <strong>{turn.speaker}</strong>
-                      <span>{formatTime(turn.start)}</span>
-                    </div>
-                    <p>{turn.text}</p>
-                  </article>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
-        {activeTab === 'profile' && (
-          <section className="panel info-panel">
-            <p className="eyebrow">context model</p>
-            <h2>Personal radio memory</h2>
-            <ul>
-              <li>taste.md: long-term taste, favorite years, disliked sounds.</li>
-              <li>routines.md: work rhythm, sleep windows, focus periods.</li>
-              <li>playlists.json: song library, playlist source, years, tags.</li>
-              <li>mood-rules.md: weather, time, and mood matching rules.</li>
-            </ul>
-          </section>
-        )}
-
-        {activeTab === 'settings' && (
-          <section className="panel info-panel">
-            <p className="eyebrow">next integrations</p>
-            <h2>Local service hooks</h2>
-            <ul>
-              <li>Claude generates episode JSON and DJ copy.</li>
-              <li>Fish Audio converts DJ copy into cached speech.</li>
-              <li>Netease API resolves songs, lyrics, and recommendations.</li>
-              <li>WebSocket streams now-playing state into this player.</li>
-            </ul>
-          </section>
+        {activeTab === 'player' ? (
+          <PlayerPanel
+            episode={episode}
+            isPlaying={isPlaying}
+            time={time}
+            progress={progress}
+            transcriptRef={transcriptRef}
+            onSeek={seek}
+            onTogglePlayback={togglePlayback}
+          />
+        ) : (
+          <InfoPanel activeTab={activeTab} />
         )}
       </section>
-    </main>
+    </AppStage>
   );
 }
 

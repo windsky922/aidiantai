@@ -33,7 +33,7 @@
     {
       "speaker": "Claudio",
       "start": 15.9,
-      "text": "After a long day with Claude Code, just breathe."
+      "text": "After a long day with Codex, just breathe."
     },
     {
       "speaker": "You",
@@ -57,4 +57,3 @@
     }
   ]
 }
-
