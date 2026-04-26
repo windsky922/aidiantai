@@ -1,59 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import pilotEpisode from './data/pilotEpisode.json';
+import type { Episode, Speaker, Turn } from './types';
 
-type Turn = {
-  speaker: 'Claudio' | 'You';
-  start: number;
-  text: string;
-};
+const toSpeaker = (speaker: string): Speaker => (speaker === 'You' ? 'You' : 'Claudio');
 
-const episode = {
-  host: 'Claudio',
-  title: 'Pilot Episode',
-  subtitle: 'If - Bread',
-  duration: 51.3,
-  songPreview:
-    'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview112/v4/43/4e/ce/434ecece-62a0-04fc-8898-55e91c5f3e75/mzaf_1137360759286248328.plus.aac.p.m4a',
-  turns: [
-    { speaker: 'Claudio', start: 0.0, text: 'This is Claudio.' },
-    {
-      speaker: 'Claudio',
-      start: 1.3,
-      text: "It's late on a Monday, and here's a song that moves with your breath.",
-    },
-    {
-      speaker: 'Claudio',
-      start: 5.9,
-      text: 'Back in 1971, David Gates picked up a nylon-string guitar and let every line end in a whisper.',
-    },
-    {
-      speaker: 'Claudio',
-      start: 11.3,
-      text: "You'll feel yourself lift off the ground a little.",
-    },
-    { speaker: 'Claudio', start: 14.4, text: "This one's called If." },
-    {
-      speaker: 'Claudio',
-      start: 15.9,
-      text: 'After a long day with Claude Code, just breathe.',
-    },
-    {
-      speaker: 'You',
-      start: 20.6,
-      text: 'The static demo is online first. The local AI station comes next.',
-    },
-    {
-      speaker: 'You',
-      start: 27.2,
-      text: 'Playlist data, taste notes, weather, schedule, and feedback will become the context.',
-    },
-    {
-      speaker: 'Claudio',
-      start: 36.0,
-      text: 'For now, this player is the shell: voice, music, transcript, waveform, and mood.',
-    },
-    { speaker: 'Claudio', start: 47.6, text: "That's enough for episode one." },
-  ] satisfies Turn[],
-};
+const normalizeEpisode = (source: typeof pilotEpisode): Episode => ({
+  ...source,
+  turns: source.turns.map((turn) => ({
+    ...turn,
+    speaker: toSpeaker(turn.speaker),
+  })),
+});
+
+const episode = normalizeEpisode(pilotEpisode);
 
 const formatTime = (seconds: number) => {
   const safe = Math.max(0, Math.floor(seconds));

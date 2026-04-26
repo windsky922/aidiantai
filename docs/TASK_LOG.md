@@ -28,6 +28,34 @@ GitHub：
 
 - 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
 
+## 2026-04-26：阶段 1.2 - 抽离节目 JSON 数据模型
+
+目标：
+
+- 将写在 `src/App.tsx` 里的节目内容抽离成可替换 JSON。
+- 为后续 Claude 生成节目数据、本地服务返回节目数据打基础。
+
+操作：
+
+- 新增 `src/data/pilotEpisode.json`。
+- 新增 `src/types.ts`，定义 `Episode`、`Turn`、`Speaker`。
+- 修改 `src/App.tsx`，改为读取 JSON 数据。
+- 添加轻量 `normalizeEpisode`，把 JSON 里的 speaker 字符串收敛为受控类型。
+
+验证：
+
+- `npm run build` 成功。
+- `http://127.0.0.1:5173/` 返回 200。
+
+结论：
+
+- 播放器已经从写死组件内容升级为数据驱动。
+- 下一步适合做阶段 1.3：把播放器拆成组件，并为 episode 数据增加基础校验与错误态。
+
+GitHub：
+
+- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
 ## 2026-04-26：阶段 1.1 - 前端项目骨架和静态播放器界面
 
 目标：

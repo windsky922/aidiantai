@@ -39,7 +39,7 @@
 
 ## 本地运行
 
-当前已完成阶段 1.1：静态播放器 Demo 骨架。
+当前已完成阶段 1.2：静态播放器 Demo 已改为 JSON 数据驱动。
 
 ```bash
 npm install
@@ -57,3 +57,13 @@ http://127.0.0.1:5173/
 ```bash
 npm run build
 ```
+
+## 当前数据入口
+
+节目数据位于：
+
+```txt
+src/data/pilotEpisode.json
+```
+
+前端会读取这个 JSON 渲染主播、节目标题、歌曲 preview 和字幕时间轴。后续本地服务或 Claude 只要生成同样结构的数据，就可以替换当前静态节目。
