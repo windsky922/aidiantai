@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { readContext } from './context.js';
+import { buildCodexDraft } from './codexDraft.js';
 import { buildCodexPrompt, buildCodexPromptSummary } from './codexPrompt.js';
 import { buildEpisodePreview, codexEpisodeSchema, readCodexSampleOutput } from './episodeContract.js';
 
@@ -10,7 +11,7 @@ const pilotEpisodeUrl = new URL('../src/data/pilotEpisode.json', import.meta.url
 const jsonHeaders = {
   'Content-Type': 'application/json; charset=utf-8',
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -30,7 +31,7 @@ const readPilotEpisode = async () => {
   return JSON.parse(content);
 };
 
-const routes = {
+const getRoutes = {
   '/api/health': async () => ({
     ok: true,
     service: 'codex-ai-radio-api',
@@ -48,6 +49,10 @@ const routes = {
   '/api/codex/episode-preview': async () => buildEpisodePreview(await readCodexSampleOutput()),
 };
 
+const postRoutes = {
+  '/api/codex/draft': buildCodexDraft,
+};
+
 const server = createServer(async (request, response) => {
   if (!request.url) {
     sendNotFound(response);
@@ -60,16 +65,17 @@ const server = createServer(async (request, response) => {
     return;
   }
 
-  if (request.method !== 'GET') {
-    sendJson(response, 405, {
-      error: 'Method not allowed',
-    });
-    return;
-  }
-
   const url = new URL(request.url, `http://${request.headers.host || `${HOST}:${PORT}`}`);
 
   try {
+    const routes = request.method === 'GET' ? getRoutes : request.method === 'POST' ? postRoutes : null;
+    if (!routes) {
+      sendJson(response, 405, {
+        error: 'Method not allowed',
+      });
+      return;
+    }
+
     const handler = routes[url.pathname];
     if (!handler) return sendNotFound(response);
     sendJson(response, 200, await handler());

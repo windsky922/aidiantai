@@ -374,3 +374,47 @@ GitHub：
 GitHub：
 
 - 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-27：阶段 2.5 - Codex 草稿生成入口和 Settings 操作界面
+
+目标：
+- 再次复查前端和后端是否存在冗余、重复和职责堆叠。
+- 在不直接覆盖播放器主节目的前提下，新增 Codex 草稿生成入口。
+- 让 Settings 页面可以手动触发草稿生成，并展示校验后的 episode 摘要。
+
+实现前判断：
+- `InfoPanel` 中残留的静态 profile/settings items 已经不再参与真实渲染，应删除，避免维护假入口。
+- 多个只做 GET JSON 的 hook 存在重复 fetch 包装，应抽成 `useApiResource`。
+- 真实 Codex 调用仍不宜直接接管播放器，应先走 `/api/codex/draft` dry-run，并复用 2.4 的 `buildEpisodePreview` 校验层。
+
+操作：
+- 新增 `src/hooks/useApiResource.ts`，复用只读 API 加载逻辑。
+- 简化 `useRadioContext`、`useCodexPromptSummary`、`useCodexEpisodePreview`。
+- 新增 `server/codexDraft.js`。
+- 修改 `server/index.js`，支持 `POST /api/codex/draft`。
+- 新增 `src/hooks/useCodexDraft.ts`。
+- 修改 `src/App.tsx` 和 `src/components/InfoPanel.tsx`，Settings 页面加入 `Generate draft` 操作。
+- 修改 `src/styles.css`，补充草稿生成按钮样式。
+- 修改 `README.md`，补充 `/api/codex/draft`。
+
+验证：
+- `node_modules\\.bin\\tsc.cmd -b` 成功。
+- `npm run build` 在默认沙箱下仍因 esbuild `spawn EPERM` 失败；提升权限后完整构建成功。
+- `buildCodexDraft()` 模块校验成功：
+  - `source=sample-output`
+  - `ok=true`
+  - `title=Late Night Pilot`
+  - `turns=4`
+- 临时 HTTP 校验成功：`POST /api/codex/draft` 返回 200，并返回已校验 episode preview。
+- 本地开发服务启动成功：
+  - `http://127.0.0.1:5173/` 返回 200。
+  - `http://127.0.0.1:8787/api/health` 返回 200。
+- 内置浏览器检查成功：Settings 页面可以点击 `Generate draft`，并展示 `Draft source` 和 `Draft episode`。
+
+结论：
+- 阶段 2.5 已建立 Codex 草稿生成的前后端闭环。
+- 当前仍使用 sample output 作为 dry-run 来源，真实 Codex 接入时只需要替换 `server/codexDraft.js` 的输出来源，校验和前端展示可以继续复用。
+- Settings 面板已加入滚动保护，避免草稿信息变长后按钮或内容被截断。
+
+GitHub：
+- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。

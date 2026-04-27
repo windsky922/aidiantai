@@ -3,4 +3,5 @@ export const API_ENDPOINTS = {
   context: '/api/context',
   codexPromptSummary: '/api/codex/prompt/summary',
   codexEpisodePreview: '/api/codex/episode-preview',
+  codexDraft: '/api/codex/draft',
 } as const;

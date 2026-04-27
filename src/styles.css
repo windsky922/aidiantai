@@ -315,6 +315,11 @@ input {
 
 .info-panel {
   padding: 26px;
+  overflow-y: auto;
+}
+
+.info-panel::-webkit-scrollbar {
+  width: 0;
 }
 
 .info-panel ul {
@@ -328,6 +333,23 @@ input {
   border-top: 1px solid rgba(20, 20, 24, 0.12);
   color: #4b4a52;
   line-height: 1.45;
+}
+
+.draft-button {
+  width: 100%;
+  height: 44px;
+  margin-top: 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #11131a;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.draft-button:disabled {
+  cursor: wait;
+  opacity: 0.64;
 }
 
 .error-copy {

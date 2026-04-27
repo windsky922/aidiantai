@@ -70,3 +70,14 @@ export type CodexEpisodePreview =
       errors: string[];
     };
 
+export type CodexDraft = {
+  source: string;
+  generatedAt: string;
+  prompt: {
+    target: string;
+    task: string;
+    instructionCount: number;
+    candidateSongCount: number;
+  };
+  preview: CodexEpisodePreview;
+};

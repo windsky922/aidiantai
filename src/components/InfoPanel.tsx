@@ -1,4 +1,5 @@
-import type { CodexEpisodePreview, CodexPromptSummary, RadioContext, TabId } from '../types';
+import type { ActionResource } from '../lib/api';
+import type { CodexDraft, CodexEpisodePreview, CodexPromptSummary, RadioContext, TabId } from '../types';
 
 type InfoPanelProps = {
   activeTab: Exclude<TabId, 'player'>;
@@ -8,28 +9,18 @@ type InfoPanelProps = {
   promptError: string | null;
   episodePreview: CodexEpisodePreview | null;
   episodePreviewError: string | null;
+  codexDraft: ActionResource<CodexDraft>;
+  onGenerateDraft: () => void;
 };
 
 const copy = {
   profile: {
     eyebrow: 'context model',
     title: 'Personal radio memory',
-    items: [
-      'taste.md: long-term taste, favorite years, disliked sounds.',
-      'routines.md: work rhythm, sleep windows, focus periods.',
-      'playlists.json: song library, playlist source, years, tags.',
-      'mood-rules.md: weather, time, and mood matching rules.',
-    ],
   },
   settings: {
-    eyebrow: 'next integrations',
-    title: 'Local service hooks',
-    items: [
-      'Codex generates episode JSON and DJ copy.',
-      'Fish Audio converts DJ copy into cached speech.',
-      'Netease API resolves songs, lyrics, and recommendations.',
-      'WebSocket streams now-playing state into this player.',
-    ],
+    eyebrow: 'draft generator',
+    title: 'Codex episode draft',
   },
 };
 
@@ -54,6 +45,7 @@ const promptItems = (
   promptError: string | null,
   episodePreview: CodexEpisodePreview | null,
   episodePreviewError: string | null,
+  codexDraft: ActionResource<CodexDraft>,
 ) => {
   if (promptError) return [`Codex prompt API error: ${promptError}`];
   if (!promptSummary) return ['Loading Codex prompt summary from /api/codex/prompt/summary.'];
@@ -61,13 +53,32 @@ const promptItems = (
   if (!episodePreview) return ['Loading Codex episode preview from /api/codex/episode-preview.'];
   if (!episodePreview.ok) return [`Preview validation failed: ${episodePreview.errors.join('; ')}`];
 
-  return [
+  const items = [
     `Target: ${promptSummary.target}.`,
     `Task: ${promptSummary.task}`,
     `${promptSummary.instructionCount} instructions and ${promptSummary.candidateSongCount} candidate songs prepared.`,
     `Preview episode: ${episodePreview.episode.title}, ${episodePreview.episode.turns.length} turns.`,
     `Selected song: ${episodePreview.selectedSong.title} - ${episodePreview.selectedSong.artist}.`,
   ];
+
+  if (codexDraft.status === 'loading') {
+    return [...items, 'Generating draft and validating episode contract.'];
+  }
+  if (codexDraft.status === 'error') {
+    return [...items, `Draft API error: ${codexDraft.error}`];
+  }
+  if (codexDraft.status === 'ready') {
+    const { data } = codexDraft;
+    if (!data.preview.ok) return [...items, `Draft validation failed: ${data.preview.errors.join('; ')}`];
+
+    return [
+      ...items,
+      `Draft source: ${data.source}.`,
+      `Draft episode: ${data.preview.episode.title}, ${data.preview.episode.turns.length} turns.`,
+    ];
+  }
+
+  return items;
 };
 
 export function InfoPanel({
@@ -78,12 +89,14 @@ export function InfoPanel({
   promptError,
   episodePreview,
   episodePreviewError,
+  codexDraft,
+  onGenerateDraft,
 }: InfoPanelProps) {
   const content = copy[activeTab];
   const items =
     activeTab === 'profile'
       ? contextItems(radioContext, contextError)
-      : promptItems(promptSummary, promptError, episodePreview, episodePreviewError);
+      : promptItems(promptSummary, promptError, episodePreview, episodePreviewError, codexDraft);
 
   return (
     <section className="panel info-panel">
@@ -94,6 +107,16 @@ export function InfoPanel({
           <li key={item}>{item}</li>
         ))}
       </ul>
+      {activeTab === 'settings' && (
+        <button
+          className="draft-button"
+          type="button"
+          disabled={codexDraft.status === 'loading'}
+          onClick={onGenerateDraft}
+        >
+          {codexDraft.status === 'loading' ? 'Generating...' : 'Generate draft'}
+        </button>
+      )}
     </section>
   );
 }

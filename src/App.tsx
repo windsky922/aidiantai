@@ -6,6 +6,7 @@ import { LoadingPanel } from './components/LoadingPanel';
 import { PlayerHeader } from './components/PlayerHeader';
 import { PlayerPanel } from './components/PlayerPanel';
 import { Tabs } from './components/Tabs';
+import { useCodexDraft } from './hooks/useCodexDraft';
 import { useCodexEpisodePreview } from './hooks/useCodexEpisodePreview';
 import { useCodexPromptSummary } from './hooks/useCodexPromptSummary';
 import { useClock } from './hooks/useClock';
@@ -55,6 +56,7 @@ function RadioApp({ episode }: RadioAppProps) {
   const contextResource = useRadioContext();
   const promptResource = useCodexPromptSummary();
   const episodePreviewResource = useCodexEpisodePreview();
+  const codexDraft = useCodexDraft();
   const transcriptRef = useRef<HTMLDivElement | null>(null);
   const player = usePlayerController(episode);
 
@@ -92,6 +94,8 @@ function RadioApp({ episode }: RadioAppProps) {
             promptError={promptError}
             episodePreview={episodePreview}
             episodePreviewError={episodePreviewError}
+            codexDraft={codexDraft.draft}
+            onGenerateDraft={codexDraft.generateDraft}
           />
         )}
       </section>
