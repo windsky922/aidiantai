@@ -1,26 +1,5 @@
 import { readContext } from './context.js';
-
-const outputSchema = {
-  episodeTitle: 'string',
-  host: 'Claudio',
-  djSay: 'string',
-  songCandidates: [
-    {
-      title: 'string',
-      artist: 'string',
-      reason: 'string',
-      mood: ['string'],
-      scene: ['string'],
-    },
-  ],
-  turns: [
-    {
-      speaker: 'Claudio',
-      start: 'number',
-      text: 'string',
-    },
-  ],
-};
+import { codexEpisodeSchema } from './episodeContract.js';
 
 const compactSong = (song) => ({
   title: song.title,
@@ -52,7 +31,7 @@ export const buildCodexPrompt = async () => {
       playlistSummary: context.summary,
       candidateSongs,
     },
-    outputSchema,
+    outputSchema: codexEpisodeSchema,
   };
 };
 
@@ -68,4 +47,3 @@ export const buildCodexPromptSummary = async () => {
     outputKeys: Object.keys(prompt.outputSchema),
   };
 };
-

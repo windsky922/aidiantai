@@ -52,3 +52,21 @@ export type CodexPromptSummary = {
   outputKeys: string[];
 };
 
+export type CodexEpisodePreview =
+  | {
+      ok: true;
+      errors: [];
+      episode: Episode;
+      selectedSong: {
+        title: string;
+        artist: string;
+        reason: string;
+        mood?: string[];
+        scene?: string[];
+      };
+    }
+  | {
+      ok: false;
+      errors: string[];
+    };
+

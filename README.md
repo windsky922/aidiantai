@@ -75,6 +75,9 @@ http://127.0.0.1:8787/api/context
 http://127.0.0.1:8787/api/context/summary
 http://127.0.0.1:8787/api/codex/prompt
 http://127.0.0.1:8787/api/codex/prompt/summary
+http://127.0.0.1:8787/api/codex/schema
+http://127.0.0.1:8787/api/codex/sample-output
+http://127.0.0.1:8787/api/codex/episode-preview
 ```
 
 ## 当前数据入口

@@ -323,3 +323,54 @@ GitHub：
 GitHub：
 
 - 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-27：阶段 2.4 - Codex 输出 schema 对齐和 Episode 预览校验
+
+目标：
+
+- 定义 Codex 未来返回的 episode plan 结构。
+- 建立 Codex 输出到播放器 `Episode` 的校验和转换入口。
+- 继续避免过早接入真实 Codex 调用，先保证接口契约稳定。
+
+实现前判断：
+
+- 当前已有 `/api/codex/prompt`，但缺少“Codex 返回值是否能被播放器消费”的验证层。
+- 最小实现是增加 sample output、schema 和 preview API，不引入新依赖、不增加持久化写入。
+- 前端 Settings 只展示校验摘要，避免把大段输出堆到界面里。
+
+操作：
+
+- 新增 `data/codex-sample-output.json`。
+- 新增 `server/episodeContract.js`。
+- 修改 `server/codexPrompt.js`，让 prompt 的 output schema 复用 episode contract。
+- 修改 `server/index.js`，新增：
+  - `/api/codex/schema`
+  - `/api/codex/sample-output`
+  - `/api/codex/episode-preview`
+- 新增 `src/hooks/useCodexEpisodePreview.ts`。
+- 修改 `src/config.ts`，增加 episode preview endpoint。
+- 修改 `src/types.ts`，新增 `CodexEpisodePreview`。
+- 修改 `src/components/InfoPanel.tsx` 和 `src/App.tsx`，Settings 页展示 sample output 校验结果。
+- 修改 `README.md`，补充新增 API 地址。
+
+验证：
+
+- `node_modules\\.bin\\tsc.cmd -b` 成功。
+- 服务端模块验证成功：
+  - `target=Codex`
+  - `candidateSongCount=3`
+  - `previewOk=true`
+  - `title=Late Night Pilot`
+  - `errors=[]`
+- `npm run build` 在默认沙箱仍失败于 esbuild `spawn EPERM`。
+- 已请求提升权限运行 `npm run build`，但本次审批超时，未完成 Vite build 验证。
+
+结论：
+
+- Codex 输出契约和播放器 Episode 契约之间已有明确转换层。
+- 下一步接真实 Codex 调用时，应先把返回值送入 `buildEpisodePreview`，再进入播放器。
+- 后续可补跑 `npm run build` 做完整 Vite 打包验证。
+
+GitHub：
+
+- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。

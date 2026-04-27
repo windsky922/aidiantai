@@ -1,4 +1,4 @@
-import type { CodexPromptSummary, RadioContext, TabId } from '../types';
+import type { CodexEpisodePreview, CodexPromptSummary, RadioContext, TabId } from '../types';
 
 type InfoPanelProps = {
   activeTab: Exclude<TabId, 'player'>;
@@ -6,6 +6,8 @@ type InfoPanelProps = {
   contextError: string | null;
   promptSummary: CodexPromptSummary | null;
   promptError: string | null;
+  episodePreview: CodexEpisodePreview | null;
+  episodePreviewError: string | null;
 };
 
 const copy = {
@@ -47,21 +49,41 @@ const contextItems = (radioContext: RadioContext | null, contextError: string | 
   ];
 };
 
-const promptItems = (promptSummary: CodexPromptSummary | null, promptError: string | null) => {
+const promptItems = (
+  promptSummary: CodexPromptSummary | null,
+  promptError: string | null,
+  episodePreview: CodexEpisodePreview | null,
+  episodePreviewError: string | null,
+) => {
   if (promptError) return [`Codex prompt API error: ${promptError}`];
   if (!promptSummary) return ['Loading Codex prompt summary from /api/codex/prompt/summary.'];
+  if (episodePreviewError) return [`Codex episode preview API error: ${episodePreviewError}`];
+  if (!episodePreview) return ['Loading Codex episode preview from /api/codex/episode-preview.'];
+  if (!episodePreview.ok) return [`Preview validation failed: ${episodePreview.errors.join('; ')}`];
 
   return [
     `Target: ${promptSummary.target}.`,
     `Task: ${promptSummary.task}`,
     `${promptSummary.instructionCount} instructions and ${promptSummary.candidateSongCount} candidate songs prepared.`,
-    `Output keys: ${promptSummary.outputKeys.join(', ')}.`,
+    `Preview episode: ${episodePreview.episode.title}, ${episodePreview.episode.turns.length} turns.`,
+    `Selected song: ${episodePreview.selectedSong.title} - ${episodePreview.selectedSong.artist}.`,
   ];
 };
 
-export function InfoPanel({ activeTab, radioContext, contextError, promptSummary, promptError }: InfoPanelProps) {
+export function InfoPanel({
+  activeTab,
+  radioContext,
+  contextError,
+  promptSummary,
+  promptError,
+  episodePreview,
+  episodePreviewError,
+}: InfoPanelProps) {
   const content = copy[activeTab];
-  const items = activeTab === 'profile' ? contextItems(radioContext, contextError) : promptItems(promptSummary, promptError);
+  const items =
+    activeTab === 'profile'
+      ? contextItems(radioContext, contextError)
+      : promptItems(promptSummary, promptError, episodePreview, episodePreviewError);
 
   return (
     <section className="panel info-panel">
