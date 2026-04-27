@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Memory"
+  short_description: "Maintain repo memory, lessons, decisions, and retrospectives."
+  default_prompt: "Update or use the project memory for this repository."

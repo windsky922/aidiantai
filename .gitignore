@@ -5,6 +5,7 @@ build/
 .env.*
 !.env.example
 cache/
+.tmp-*/
 *.log
 *-dev.log
 *-dev.err.log

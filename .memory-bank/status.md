@@ -1,0 +1,23 @@
+# Status
+
+Last updated: 2026-04-27
+
+## Project Snapshot
+
+- Project: AI radio reproduction inspired by mmguo's Claudio FM.
+- Repository: `https://github.com/windsky922/aidiantai.git`.
+- Local path: `C:\Users\Administrator\Documents\New project 2`.
+- Current focus: Build a local personal AI radio system with Codex/OpenAI as the final AI processor.
+
+## Current State
+
+- Static player, local context API, Codex prompt preview, episode contract validation, draft generation, and provider adapter are implemented.
+- Draft generation defaults to `sample` provider so the app runs without external credentials.
+- OpenAI Responses provider is scaffolded but should only run after `CODEX_DRAFT_PROVIDER=openai` and `OPENAI_API_KEY` are explicitly configured.
+- Settings tab can generate and validate a draft without replacing the active player episode.
+
+## Next Steps
+
+- Add a controlled path from validated draft preview to the player episode.
+- Add provider health/status display before attempting real OpenAI calls.
+- Later: connect TTS, music API, weather, schedule, and feedback memory.
