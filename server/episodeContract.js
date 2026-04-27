@@ -25,6 +25,55 @@ export const codexEpisodeSchema = {
   ],
 };
 
+export const codexEpisodeJsonSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['episodeTitle', 'subtitle', 'host', 'duration', 'songPreview', 'djSay', 'selectedSong', 'turns'],
+  properties: {
+    episodeTitle: { type: 'string' },
+    subtitle: { type: 'string' },
+    host: { type: 'string' },
+    duration: { type: 'number' },
+    songPreview: { type: 'string' },
+    djSay: { type: 'string' },
+    selectedSong: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['title', 'artist', 'reason', 'mood', 'scene'],
+      properties: {
+        title: { type: 'string' },
+        artist: { type: 'string' },
+        reason: { type: 'string' },
+        mood: {
+          type: 'array',
+          items: { type: 'string' },
+        },
+        scene: {
+          type: 'array',
+          items: { type: 'string' },
+        },
+      },
+    },
+    turns: {
+      type: 'array',
+      minItems: 1,
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['speaker', 'start', 'text'],
+        properties: {
+          speaker: {
+            type: 'string',
+            enum: ['Claudio', 'You'],
+          },
+          start: { type: 'number' },
+          text: { type: 'string' },
+        },
+      },
+    },
+  },
+};
+
 const isRecord = (value) => typeof value === 'object' && value !== null && !Array.isArray(value);
 const isNonEmptyString = (value) => typeof value === 'string' && value.trim().length > 0;
 const isPositiveNumber = (value) => typeof value === 'number' && Number.isFinite(value) && value > 0;
@@ -109,4 +158,3 @@ export const buildEpisodePreview = (plan) => {
 };
 
 export const readCodexSampleOutput = async () => JSON.parse(await readFile(sampleOutputUrl, 'utf8'));
-

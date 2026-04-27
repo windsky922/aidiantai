@@ -73,6 +73,7 @@ const promptItems = (
 
     return [
       ...items,
+      `Draft provider: ${data.provider}${data.model ? ` (${data.model})` : ''}.`,
       `Draft source: ${data.source}.`,
       `Draft episode: ${data.preview.episode.title}, ${data.preview.episode.turns.length} turns.`,
     ];

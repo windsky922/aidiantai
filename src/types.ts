@@ -72,6 +72,8 @@ export type CodexEpisodePreview =
 
 export type CodexDraft = {
   source: string;
+  provider: string;
+  model: string | null;
   generatedAt: string;
   prompt: {
     target: string;

@@ -418,3 +418,48 @@ GitHub：
 
 GitHub：
 - 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-27：阶段 2.6 - Codex provider 适配层和 OpenAI Responses dry-run
+
+目标：
+- 将阶段 2.5 的 sample draft 来源抽象为可切换 provider。
+- 默认继续使用 sample，保证无 API key 时项目仍可运行。
+- 预留 OpenAI Responses API 调用路径，并继续复用 Episode 校验层。
+
+实现前判断：
+- 不应把真实 API 调用写进 UI 或路由处理函数里，避免后续 provider 增加时重复改前端。
+- 当前 `codexDraft.js` 同时负责 prompt、sample 输出和 draft 组装，适合拆出 `codexProvider.js`。
+- OpenAI 调用需要使用 JSON schema 约束输出，避免模型返回不可消费的自然语言。
+
+操作：
+- 新增 `server/codexProvider.js`，支持 `sample` 和 `openai` provider。
+- 新增 `codexEpisodeJsonSchema`，用于 OpenAI Responses API structured output。
+- 修改 `server/codexDraft.js`，只负责编排 prompt、provider 输出和 preview 校验。
+- 修改 `server/index.js`，新增 `/api/codex/json-schema`。
+- 修改 `src/types.ts` 和 `InfoPanel`，显示 draft provider 和 model。
+- 新增 `.env.example`，记录 `CODEX_DRAFT_PROVIDER`、`OPENAI_API_KEY`、`OPENAI_MODEL` 等配置。
+- 修改 `README.md`，记录 provider 配置和隐私边界。
+
+验证：
+- `node_modules\\.bin\\tsc.cmd -b` 成功。
+- sample provider 模块校验成功：
+  - `provider=sample`
+  - `source=sample-output`
+  - `model=null`
+  - `ok=true`
+  - `title=Late Night Pilot`
+- 临时 HTTP 校验成功：
+  - `POST /api/codex/draft` 返回 200。
+  - `/api/codex/json-schema` 返回 `type=object`。
+- `CODEX_DRAFT_PROVIDER=openai` 且未配置 `OPENAI_API_KEY` 时，会返回明确配置错误，未发生外部请求。
+- `npm run build` 在默认沙箱下仍因 esbuild `spawn EPERM` 失败；提升权限后完整构建成功。
+- 重启本地开发服务后，`POST /api/codex/draft` 返回 `provider=sample`。
+- 内置浏览器检查成功：Settings 页面点击 `Generate draft` 后展示 `Draft provider: sample.`。
+
+结论：
+- provider 适配层已建立，默认 sample 路径保持稳定。
+- OpenAI Responses 路径已预留，但只有显式配置 API key 和 provider 后才会发送本地上下文。
+- 真实 OpenAI 调用的输出会先经过 JSON schema 约束，再经过 `buildEpisodePreview` 校验。
+
+GitHub：
+- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。

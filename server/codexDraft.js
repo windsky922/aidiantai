@@ -1,5 +1,6 @@
 import { buildCodexPrompt } from './codexPrompt.js';
-import { buildEpisodePreview, readCodexSampleOutput } from './episodeContract.js';
+import { buildEpisodePreview } from './episodeContract.js';
+import { generateCodexEpisodePlan } from './codexProvider.js';
 
 const summarizePrompt = (prompt) => ({
   target: prompt.target,
@@ -9,12 +10,15 @@ const summarizePrompt = (prompt) => ({
 });
 
 export const buildCodexDraft = async () => {
-  const [prompt, output] = await Promise.all([buildCodexPrompt(), readCodexSampleOutput()]);
+  const prompt = await buildCodexPrompt();
+  const result = await generateCodexEpisodePlan(prompt);
 
   return {
-    source: 'sample-output',
+    source: result.source,
+    provider: result.provider,
+    model: result.model,
     generatedAt: new Date().toISOString(),
     prompt: summarizePrompt(prompt),
-    preview: buildEpisodePreview(output),
+    preview: buildEpisodePreview(result.output),
   };
 };
