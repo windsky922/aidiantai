@@ -6,4 +6,5 @@
 - Added static player, local API, context files, Codex prompt preview, episode contract validation, draft generation, and provider adapter.
 - Added `.memory-bank/` project memory structure based on `windsky922/skill-memory`.
 - Added a safe `Apply to player` flow from validated draft to active player episode.
-- Next useful implementation step: add confirmation, rollback, or draft history around applied episodes.
+- Added one-step in-memory `Restore previous` for applied drafts.
+- Next useful implementation step: add confirmation or persistent draft history around applied episodes.

@@ -496,3 +496,37 @@ GitHub：
 
 GitHub：
 - 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-29：阶段 2.8 - 应用 draft 后恢复 previous episode
+
+目标：
+- 给阶段 2.7 的 `Apply to player` 增加内存级回滚能力。
+- 继续保持显式操作边界，避免自动覆盖和不可撤回。
+- 不引入持久化历史，先验证最小可用的恢复路径。
+
+实现前判断：
+- 当前播放器已经有 `activeEpisode`，最小扩展是增加 `previousEpisode`。
+- 回滚应该只恢复上一版播放器节目，并清空 previous，避免形成隐式多级历史。
+- 当前阶段不需要后端接口，因为这是纯前端会话状态。
+
+操作：
+- 修改 `src/App.tsx`，新增 `previousEpisode` 状态。
+- `Apply to player` 前保存当前 `activeEpisode`。
+- 新增 `restorePreviousEpisode`，恢复 previous 并切回 Player。
+- 修改 `src/components/InfoPanel.tsx`，Settings 增加 `Restore previous` 按钮，并显示当前 player episode。
+- 修改 `src/styles.css`，区分 loading disabled 和普通 disabled 按钮状态。
+
+验证：
+- `node_modules\\.bin\\tsc.cmd -b` 成功。
+- `npm run build` 在默认沙箱下仍因 esbuild `spawn EPERM` 失败；提升权限后完整构建成功。
+- 本地开发服务启动成功：
+  - `http://127.0.0.1:5173/` 返回 200。
+  - `http://127.0.0.1:8787/api/health` 返回 200。
+- 内置浏览器检查成功：`Generate draft` -> `Apply to player` -> `Restore previous` 后恢复 `Pilot Episode`。
+
+结论：
+- draft 应用流程现在具备一次性回滚能力。
+- 后续如果需要多草稿、多版本或跨刷新保存，应单独设计 draft history，而不是继续堆在当前组件状态里。
+
+GitHub：
+- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。

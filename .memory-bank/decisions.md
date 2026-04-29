@@ -37,3 +37,8 @@ YYYY-MM-DD - Decision title
 - Decision: A generated draft can enter the player only through an explicit `Apply to player` action.
 - Reason: Draft output should be reviewed and validated before changing the listening experience.
 - Consequence: Future save/history/rollback features should extend this apply flow instead of bypassing it.
+
+2026-04-29 - Keep draft rollback in memory for now
+- Decision: Restore support is currently one-step and in-memory only.
+- Reason: It verifies the UX without introducing persistence or version-history complexity.
+- Consequence: Persistent draft history should be designed separately if needed.

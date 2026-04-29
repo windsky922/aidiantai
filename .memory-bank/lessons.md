@@ -37,3 +37,8 @@ YYYY-MM-DD - Lesson title
 - Context: Draft episodes can now replace the active player episode.
 - Lesson: Audio element refs, speech synthesis, playback state, and timeline state must reset when `songPreview` changes.
 - Apply next time: Any player data-source switch should include lifecycle cleanup in `usePlayerController`.
+
+2026-04-29 - Add rollback before persistence
+- Context: Draft application needed a safer recovery path.
+- Lesson: A one-step in-memory restore is a useful checkpoint before designing persistent draft history.
+- Apply next time: Validate reversible UI flows before adding storage or multi-version state.

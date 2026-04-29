@@ -53,6 +53,7 @@ type RadioAppProps = {
 function RadioApp({ episode }: RadioAppProps) {
   const [activeTab, setActiveTab] = useState<TabId>('player');
   const [activeEpisode, setActiveEpisode] = useState(episode);
+  const [previousEpisode, setPreviousEpisode] = useState<Episode | null>(null);
   const clock = useClock();
   const contextResource = useRadioContext();
   const promptResource = useCodexPromptSummary();
@@ -65,7 +66,15 @@ function RadioApp({ episode }: RadioAppProps) {
 
   const applyDraftToPlayer = () => {
     if (codexDraft.draft.status !== 'ready' || !codexDraft.draft.data.preview.ok) return;
+    setPreviousEpisode(activeEpisode);
     setActiveEpisode(codexDraft.draft.data.preview.episode);
+    setActiveTab('player');
+  };
+
+  const restorePreviousEpisode = () => {
+    if (!previousEpisode) return;
+    setActiveEpisode(previousEpisode);
+    setPreviousEpisode(null);
     setActiveTab('player');
   };
 
@@ -102,8 +111,11 @@ function RadioApp({ episode }: RadioAppProps) {
             episodePreview={episodePreview}
             episodePreviewError={episodePreviewError}
             codexDraft={codexDraft.draft}
+            activeEpisodeTitle={activeEpisode.title}
+            canRestoreEpisode={Boolean(previousEpisode)}
             onGenerateDraft={codexDraft.generateDraft}
             onApplyDraft={applyDraftToPlayer}
+            onRestoreEpisode={restorePreviousEpisode}
           />
         )}
       </section>

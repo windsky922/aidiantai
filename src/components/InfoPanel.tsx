@@ -10,8 +10,11 @@ type InfoPanelProps = {
   episodePreview: CodexEpisodePreview | null;
   episodePreviewError: string | null;
   codexDraft: ActionResource<CodexDraft>;
+  activeEpisodeTitle: string;
+  canRestoreEpisode: boolean;
   onGenerateDraft: () => void;
   onApplyDraft: () => void;
+  onRestoreEpisode: () => void;
 };
 
 const copy = {
@@ -47,6 +50,7 @@ const promptItems = (
   episodePreview: CodexEpisodePreview | null,
   episodePreviewError: string | null,
   codexDraft: ActionResource<CodexDraft>,
+  activeEpisodeTitle: string,
 ) => {
   if (promptError) return [`Codex prompt API error: ${promptError}`];
   if (!promptSummary) return ['Loading Codex prompt summary from /api/codex/prompt/summary.'];
@@ -58,6 +62,7 @@ const promptItems = (
     `Target: ${promptSummary.target}.`,
     `Task: ${promptSummary.task}`,
     `${promptSummary.instructionCount} instructions and ${promptSummary.candidateSongCount} candidate songs prepared.`,
+    `Player episode: ${activeEpisodeTitle}.`,
     `Preview episode: ${episodePreview.episode.title}, ${episodePreview.episode.turns.length} turns.`,
     `Selected song: ${episodePreview.selectedSong.title} - ${episodePreview.selectedSong.artist}.`,
   ];
@@ -92,14 +97,17 @@ export function InfoPanel({
   episodePreview,
   episodePreviewError,
   codexDraft,
+  activeEpisodeTitle,
+  canRestoreEpisode,
   onGenerateDraft,
   onApplyDraft,
+  onRestoreEpisode,
 }: InfoPanelProps) {
   const content = copy[activeTab];
   const items =
     activeTab === 'profile'
       ? contextItems(radioContext, contextError)
-      : promptItems(promptSummary, promptError, episodePreview, episodePreviewError, codexDraft);
+      : promptItems(promptSummary, promptError, episodePreview, episodePreviewError, codexDraft, activeEpisodeTitle);
 
   return (
     <section className="panel info-panel">
@@ -113,7 +121,7 @@ export function InfoPanel({
       {activeTab === 'settings' && (
         <div className="draft-actions">
           <button
-            className="draft-button"
+            className={`draft-button ${codexDraft.status === 'loading' ? 'loading' : ''}`}
             type="button"
             disabled={codexDraft.status === 'loading'}
             onClick={onGenerateDraft}
@@ -127,6 +135,14 @@ export function InfoPanel({
             onClick={onApplyDraft}
           >
             Apply to player
+          </button>
+          <button
+            className="draft-button secondary"
+            type="button"
+            disabled={!canRestoreEpisode}
+            onClick={onRestoreEpisode}
+          >
+            Restore previous
           </button>
         </div>
       )}
