@@ -28,6 +28,17 @@ export function usePlayerController(episode: Episode) {
     return audioRef.current;
   }, [episode.songPreview]);
 
+  useEffect(() => {
+    audioRef.current?.pause();
+    audioRef.current = null;
+    analyserRef.current = null;
+    audioContextRef.current?.close().catch(() => undefined);
+    audioContextRef.current = null;
+    window.speechSynthesis?.cancel();
+    setIsPlaying(false);
+    setTime(0);
+  }, [episode.songPreview]);
+
   const ensureAnalyser = useCallback(() => {
     const audio = ensureAudio();
     if (analyserRef.current || !canvasRef.current) return;

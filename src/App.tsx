@@ -52,15 +52,22 @@ type RadioAppProps = {
 
 function RadioApp({ episode }: RadioAppProps) {
   const [activeTab, setActiveTab] = useState<TabId>('player');
+  const [activeEpisode, setActiveEpisode] = useState(episode);
   const clock = useClock();
   const contextResource = useRadioContext();
   const promptResource = useCodexPromptSummary();
   const episodePreviewResource = useCodexEpisodePreview();
   const codexDraft = useCodexDraft();
   const transcriptRef = useRef<HTMLDivElement | null>(null);
-  const player = usePlayerController(episode);
+  const player = usePlayerController(activeEpisode);
 
-  useTranscriptScroll(episode, player.time, transcriptRef);
+  useTranscriptScroll(activeEpisode, player.time, transcriptRef);
+
+  const applyDraftToPlayer = () => {
+    if (codexDraft.draft.status !== 'ready' || !codexDraft.draft.data.preview.ok) return;
+    setActiveEpisode(codexDraft.draft.data.preview.episode);
+    setActiveTab('player');
+  };
 
   const radioContext = contextResource.status === 'ready' ? contextResource.data : null;
   const contextError = contextResource.status === 'error' ? contextResource.error : null;
@@ -73,11 +80,11 @@ function RadioApp({ episode }: RadioAppProps) {
     <AppStage>
       <section className="device" aria-label="Claudio FM player">
         <Tabs activeTab={activeTab} onChange={setActiveTab} />
-        <PlayerHeader host={episode.host} isPlaying={player.isPlaying} clock={clock} canvasRef={player.canvasRef} />
+        <PlayerHeader host={activeEpisode.host} isPlaying={player.isPlaying} clock={clock} canvasRef={player.canvasRef} />
 
         {activeTab === 'player' ? (
           <PlayerPanel
-            episode={episode}
+            episode={activeEpisode}
             isPlaying={player.isPlaying}
             time={player.time}
             progress={player.progress}
@@ -96,6 +103,7 @@ function RadioApp({ episode }: RadioAppProps) {
             episodePreviewError={episodePreviewError}
             codexDraft={codexDraft.draft}
             onGenerateDraft={codexDraft.generateDraft}
+            onApplyDraft={applyDraftToPlayer}
           />
         )}
       </section>

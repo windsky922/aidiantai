@@ -463,3 +463,36 @@ GitHub：
 
 GitHub：
 - 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-29：阶段 2.7 - 已校验 draft 应用到播放器
+
+目标：
+- 给阶段 2.6 的已校验 draft 增加显式应用入口。
+- 保持“不自动覆盖当前播放器”的安全边界。
+- 修复 episode 切换时旧音频、进度、语音和播放状态残留的问题。
+
+实现前判断：
+- 当前 Settings 已能生成 draft，但只能展示摘要，无法进入播放器体验。
+- 最小可行改动是在前端维护 `activeEpisode`，只在用户点击 `Apply to player` 后替换播放器数据。
+- `usePlayerController` 之前会复用旧 `audioRef`，episode 变更时必须主动重置。
+
+操作：
+- 修改 `src/App.tsx`，新增 `activeEpisode`，播放器改为读取当前 active episode。
+- 修改 `src/components/InfoPanel.tsx`，Settings 中新增 `Apply to player` 按钮。
+- 修改 `src/hooks/usePlayerController.ts`，episode songPreview 变更时重置音频、语音、进度和播放状态。
+- 修改 `src/styles.css`，加入 draft 操作区和次级按钮样式。
+
+验证：
+- `node_modules\\.bin\\tsc.cmd -b` 成功。
+- `npm run build` 在默认沙箱下仍因 esbuild `spawn EPERM` 失败；提升权限后完整构建成功。
+- 本地开发服务启动成功：
+  - `http://127.0.0.1:5173/` 返回 200。
+  - `http://127.0.0.1:8787/api/health` 返回 200。
+- 内置浏览器检查成功：Settings 点击 `Generate draft` 后，`Apply to player` 会切回 Player，并显示 `Late Night Pilot`。
+
+结论：
+- draft 已具备从“校验预览”进入“播放器体验”的受控路径。
+- 仍然没有自动覆盖当前节目，后续可继续加确认、撤回或保存草稿历史。
+
+GitHub：
+- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。

@@ -11,6 +11,7 @@ type InfoPanelProps = {
   episodePreviewError: string | null;
   codexDraft: ActionResource<CodexDraft>;
   onGenerateDraft: () => void;
+  onApplyDraft: () => void;
 };
 
 const copy = {
@@ -92,6 +93,7 @@ export function InfoPanel({
   episodePreviewError,
   codexDraft,
   onGenerateDraft,
+  onApplyDraft,
 }: InfoPanelProps) {
   const content = copy[activeTab];
   const items =
@@ -109,14 +111,24 @@ export function InfoPanel({
         ))}
       </ul>
       {activeTab === 'settings' && (
-        <button
-          className="draft-button"
-          type="button"
-          disabled={codexDraft.status === 'loading'}
-          onClick={onGenerateDraft}
-        >
-          {codexDraft.status === 'loading' ? 'Generating...' : 'Generate draft'}
-        </button>
+        <div className="draft-actions">
+          <button
+            className="draft-button"
+            type="button"
+            disabled={codexDraft.status === 'loading'}
+            onClick={onGenerateDraft}
+          >
+            {codexDraft.status === 'loading' ? 'Generating...' : 'Generate draft'}
+          </button>
+          <button
+            className="draft-button secondary"
+            type="button"
+            disabled={codexDraft.status !== 'ready' || !codexDraft.data.preview.ok}
+            onClick={onApplyDraft}
+          >
+            Apply to player
+          </button>
+        </div>
       )}
     </section>
   );

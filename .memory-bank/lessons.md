@@ -32,3 +32,8 @@ YYYY-MM-DD - Lesson title
 - Context: Large source/log reads can overload conversation context.
 - Lesson: Use context-mode indexing and targeted search for long outputs.
 - Apply next time: Use `ctx_batch_execute` for multi-file source review and search summaries.
+
+2026-04-29 - Reset player state when swapping episodes
+- Context: Draft episodes can now replace the active player episode.
+- Lesson: Audio element refs, speech synthesis, playback state, and timeline state must reset when `songPreview` changes.
+- Apply next time: Any player data-source switch should include lifecycle cleanup in `usePlayerController`.

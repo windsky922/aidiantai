@@ -32,3 +32,8 @@ YYYY-MM-DD - Decision title
 - Decision: Store durable project memory in `.memory-bank/` and expose the workflow through `.agents/skills/project-memory/`.
 - Reason: This matches the user's `skill-memory` project pattern.
 - Consequence: `docs/PROJECT_MEMORY.md` is superseded by structured memory files.
+
+2026-04-29 - Apply validated drafts explicitly
+- Decision: A generated draft can enter the player only through an explicit `Apply to player` action.
+- Reason: Draft output should be reviewed and validated before changing the listening experience.
+- Consequence: Future save/history/rollback features should extend this apply flow instead of bypassing it.
