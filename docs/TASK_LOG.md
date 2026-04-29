@@ -417,7 +417,7 @@ GitHub：
 - Settings 面板已加入滚动保护，避免草稿信息变长后按钮或内容被截断。
 
 GitHub：
-- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
 
 ## 2026-04-27：阶段 2.6 - Codex provider 适配层和 OpenAI Responses dry-run
 
@@ -568,4 +568,4 @@ GitHub：
 - OpenAI 真实调用仍保持显式配置边界，不会在默认状态发送本地上下文。
 
 GitHub：
-- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
