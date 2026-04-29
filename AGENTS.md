@@ -1,20 +1,20 @@
-# Project Operating Instructions
+# 项目操作说明
 
-Use `.memory-bank/` as the persistent project memory for this workspace.
+本工作区使用 `.memory-bank/` 作为持久项目记忆。
 
-At the start of meaningful work, read the relevant memory files before making assumptions:
+开始任何有实际影响的工作前，先阅读相关记忆文件，再判断当前状态：
 
 - `.memory-bank/status.md`
 - `.memory-bank/architecture.md`
 - `.memory-bank/conventions.md`
 - `.memory-bank/lessons.md`
 
-After completing meaningful work, update the memory bank when new information was learned:
+完成有实际影响的工作后，如果产生了新的长期信息，需要更新记忆库：
 
-- Append completed work and next steps to `.memory-bank/progress.md`.
-- Update `.memory-bank/status.md` when project state, active focus, blockers, or next actions change.
-- Add durable mistakes, preferences, or reusable patterns to `.memory-bank/lessons.md`.
-- Add architecture or workflow decisions to `.memory-bank/decisions.md`.
-- Update `.memory-bank/final-retrospective.md` when a project or major milestone is finished.
+- 将已完成工作和下一步追加到 `.memory-bank/progress.md`。
+- 当项目状态、当前重点、阻塞点或下一步变化时，更新 `.memory-bank/status.md`。
+- 将长期有用的错误、偏好或可复用模式写入 `.memory-bank/lessons.md`。
+- 将架构或流程决策写入 `.memory-bank/decisions.md`。
+- 当项目或重要里程碑完成时，更新 `.memory-bank/final-retrospective.md`。
 
-Keep memory entries concise, factual, and reusable. Do not store secrets, credentials, private tokens, or unnecessary raw sensitive data.
+记忆条目必须简洁、事实化、可复用。不要保存密钥、凭据、私有令牌或不必要的原始敏感数据。

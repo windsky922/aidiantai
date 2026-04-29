@@ -1,44 +1,44 @@
-# Project Memory
+# 项目记忆
 
-Use this skill to keep durable project knowledge in `.memory-bank/`.
+使用这个技能将长期项目知识维护在 `.memory-bank/` 中。
 
-## When To Use
+## 何时使用
 
-- Starting or resuming work in this repository.
-- Completing a meaningful task, milestone, document, analysis, or feature.
-- The user asks to remember project experience, summarize lessons, continue prior work, or update memory.
-- You discover durable project facts, decisions, conventions, recurring mistakes, or workflow preferences.
+- 开始或继续处理本仓库工作时。
+- 完成有实际影响的任务、里程碑、文档、分析或功能时。
+- 用户要求记录项目经验、总结教训、延续之前工作或更新记忆时。
+- 发现长期有用的项目事实、决策、约定、重复错误或流程偏好时。
 
-## Memory Files
+## 记忆文件
 
-- `.memory-bank/status.md`: current project state, active work, next steps.
-- `.memory-bank/progress.md`: chronological work log.
-- `.memory-bank/lessons.md`: reusable mistakes, patterns, and project experience.
-- `.memory-bank/decisions.md`: decisions and their consequences.
-- `.memory-bank/architecture.md`: workspace map, structure, and important technical context.
-- `.memory-bank/conventions.md`: user preferences, file handling rules, verification norms.
-- `.memory-bank/final-retrospective.md`: end-of-project or milestone retrospective.
+- `.memory-bank/status.md`：当前项目状态、工作重点和下一步。
+- `.memory-bank/progress.md`：按时间记录的工作进展。
+- `.memory-bank/lessons.md`：可复用的错误、模式和项目经验。
+- `.memory-bank/decisions.md`：项目决策及其后果。
+- `.memory-bank/architecture.md`：工作区地图、结构和重要技术上下文。
+- `.memory-bank/conventions.md`：用户偏好、文件处理规则和验证规范。
+- `.memory-bank/final-retrospective.md`：项目结束或里程碑完成后的复盘。
 
-## Workflow
+## 工作流程
 
-1. Before meaningful work, read the smallest set of memory files needed for the task.
-2. During work, rely on memory as project context, not as a substitute for inspecting current files.
-3. After meaningful work, update only the files that changed in substance.
-4. Keep entries concise and dated.
-5. Store durable conclusions, not raw command output or long chat transcripts.
+1. 开始有实际影响的工作前，只读取完成任务所需的最小记忆文件集合。
+2. 工作中把记忆作为项目上下文，但不能用它代替对当前文件的检查。
+3. 完成有实际影响的工作后，只更新内容确实发生变化的记忆文件。
+4. 条目保持简洁，并写明日期。
+5. 保存长期结论，不保存原始命令输出或长篇聊天记录。
 
-## Completion Update Rules
+## 完成后的更新规则
 
-- Append completed work and next steps to `progress.md`.
-- Update `status.md` when active focus, blockers, or next actions change.
-- Add to `lessons.md` only when the lesson should influence future work.
-- Add to `decisions.md` when a choice should constrain later implementation.
-- Add to `architecture.md` when structure, data flow, or integration boundaries change.
-- Add to `conventions.md` when stable user preferences or repo rules are learned.
-- Update `final-retrospective.md` when a milestone or major deliverable is completed.
+- 将已完成工作和下一步追加到 `progress.md`。
+- 当当前重点、阻塞点或下一步变化时，更新 `status.md`。
+- 只有会影响后续工作的教训才写入 `lessons.md`。
+- 当某个选择会约束后续实现时，写入 `decisions.md`。
+- 当结构、数据流或集成边界变化时，写入 `architecture.md`。
+- 当稳定的用户偏好或仓库规则被确认时，写入 `conventions.md`。
+- 当里程碑或主要交付物完成时，更新 `final-retrospective.md`。
 
-## Safety
+## 安全要求
 
-- Do not store secrets, tokens, credentials, private account details, or unnecessary raw sensitive data.
-- If a fact is uncertain, mark it as uncertain instead of presenting it as settled.
-- Do not overwrite user-authored memory entries without preserving their intent.
+- 不保存密钥、令牌、凭据、私人账号细节或不必要的原始敏感数据。
+- 如果事实不确定，必须标注不确定，不能当作已确认结论。
+- 不覆盖用户写入的记忆意图；需要修改时保留原意。

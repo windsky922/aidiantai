@@ -1,12 +1,18 @@
-# Progress Log
+# 进展记录
 
 ## 2026-04-27
 
-- Built stages 0 through 2.6 of the AI radio project.
-- Added static player, local API, context files, Codex prompt preview, episode contract validation, draft generation, and provider adapter.
-- Added `.memory-bank/` project memory structure based on `windsky922/skill-memory`.
-- Added a safe `Apply to player` flow from validated draft to active player episode.
-- Added one-step in-memory `Restore previous` for applied drafts.
-- Added `/api/codex/provider-status` and Settings provider status display.
-- Added a confirmation step before applying a validated draft to the player.
-- Next useful implementation step: add persistent draft history around applied episodes, then a guarded OpenAI dry-run.
+- 已完成 AI 电台项目阶段 0 到阶段 2.6。
+- 已加入静态播放器、本地 API、上下文文件、Codex prompt 预览、节目契约校验、草稿生成和 provider 适配层。
+- 已根据 `windsky922/skill-memory` 模式加入 `.memory-bank/` 项目记忆结构。
+- 已加入从已校验草稿到当前播放器节目的安全 `Apply to player` 流程。
+- 已为应用后的草稿加入一步内存级 `Restore previous`。
+- 已加入 `/api/codex/provider-status` 和 Settings 页面 provider 状态展示。
+- 已在应用已校验草稿到播放器前加入确认步骤。
+- 下一步适合为已应用节目增加持久化草稿历史，然后做受保护的 OpenAI dry-run。
+
+## 2026-04-29
+
+- 已将项目文档、项目记忆和项目技能说明的说明性文字统一改为中文。
+- 已在项目约定中加入“后续文档必须使用中文”的规则。
+- 下一步仍是持久化草稿历史和受保护的 OpenAI dry-run。

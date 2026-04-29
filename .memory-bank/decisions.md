@@ -1,54 +1,59 @@
-# Decisions
+# 项目决策
 
-Record project-level decisions that should guide future work.
+记录会影响后续工作的项目级决策。
 
-## Format
+## 格式
 
 ```text
-YYYY-MM-DD - Decision title
-- Decision:
-- Reason:
-- Consequence:
+YYYY-MM-DD - 决策标题
+- 决策：
+- 原因：
+- 影响：
 ```
 
-## Entries
+## 条目
 
-2026-04-27 - Use Codex/OpenAI as final AI processor
-- Decision: The final AI processor for this project is Codex/OpenAI, not Claude.
-- Reason: The user explicitly corrected the project direction.
-- Consequence: Code, docs, prompts, and UI should use Codex/OpenAI terminology except when referencing the original Claudio project.
+2026-04-27 - 使用 Codex/OpenAI 作为最终 AI 处理核心
+- 决策：本项目最终 AI 处理核心是 Codex/OpenAI，不是 Claude。
+- 原因：用户明确修正了项目方向。
+- 影响：除非引用原始 Claudio 项目，代码、文档、prompt 和 UI 都应使用 Codex/OpenAI 术语。
 
-2026-04-27 - Keep draft generation separate from active playback
-- Decision: AI generation should create validated drafts first, not overwrite the active player episode.
-- Reason: Model output may be invalid or undesirable until reviewed.
-- Consequence: New generation features should use preview/promote flows.
+2026-04-27 - 草稿生成与当前播放分离
+- 决策：AI 生成应先创建已校验草稿，不能直接覆盖当前播放器节目。
+- 原因：模型输出在审核前可能无效或不符合预期。
+- 影响：新的生成能力应使用预览和显式应用流程。
 
-2026-04-27 - Use provider adapter for draft source
-- Decision: Keep draft source selection in `server/codexProvider.js`.
-- Reason: The app needs to run without keys through `sample`, while allowing later OpenAI Responses calls.
-- Consequence: UI and routes should consume `buildCodexDraft` and avoid provider-specific logic.
+2026-04-27 - 使用 provider 适配层管理草稿来源
+- 决策：草稿来源选择集中在 `server/codexProvider.js`。
+- 原因：应用需要通过 `sample` 在无密钥状态运行，同时保留后续 OpenAI Responses 调用能力。
+- 影响：UI 和路由应消费 `buildCodexDraft`，避免包含 provider 专属逻辑。
 
-2026-04-27 - Use `.memory-bank/` project memory
-- Decision: Store durable project memory in `.memory-bank/` and expose the workflow through `.agents/skills/project-memory/`.
-- Reason: This matches the user's `skill-memory` project pattern.
-- Consequence: `docs/PROJECT_MEMORY.md` is superseded by structured memory files.
+2026-04-27 - 使用 `.memory-bank/` 作为项目记忆
+- 决策：长期项目记忆保存在 `.memory-bank/`，并通过 `.agents/skills/project-memory/` 暴露工作流。
+- 原因：这符合用户的 `skill-memory` 项目模式。
+- 影响：结构化记忆文件取代 `docs/PROJECT_MEMORY.md`。
 
-2026-04-29 - Apply validated drafts explicitly
-- Decision: A generated draft can enter the player only through an explicit `Apply to player` action.
-- Reason: Draft output should be reviewed and validated before changing the listening experience.
-- Consequence: Future save/history/rollback features should extend this apply flow instead of bypassing it.
+2026-04-29 - 已校验草稿必须显式应用
+- 决策：生成草稿只能通过显式 `Apply to player` 操作进入播放器。
+- 原因：改变收听体验前，草稿输出应先被查看和校验。
+- 影响：后续保存、历史和回滚能力应扩展这个应用流程，而不是绕过它。
 
-2026-04-29 - Keep draft rollback in memory for now
-- Decision: Restore support is currently one-step and in-memory only.
-- Reason: It verifies the UX without introducing persistence or version-history complexity.
-- Consequence: Persistent draft history should be designed separately if needed.
+2026-04-29 - 草稿回滚暂时只保存在内存中
+- 决策：当前恢复能力只支持一步内存恢复。
+- 原因：这样可以先验证体验，不引入持久化或版本历史复杂度。
+- 影响：如果需要持久化草稿历史，应单独设计。
 
-2026-04-29 - Keep provider readiness on the server
-- Decision: Provider status and environment-variable checks live in `server/codexProvider.js`.
-- Reason: The UI should not duplicate backend provider selection rules or risk exposing secrets.
-- Consequence: New provider configuration checks should extend `/api/codex/provider-status`.
+2026-04-29 - Provider 就绪判断留在服务端
+- 决策：Provider 状态和环境变量检查位于 `server/codexProvider.js`。
+- 原因：UI 不应重复后端 provider 选择规则，也不能冒险暴露密钥。
+- 影响：新的 provider 配置检查应扩展 `/api/codex/provider-status`。
 
-2026-04-29 - Confirm before replacing the player episode
-- Decision: `Apply to player` opens an inline confirmation before changing `activeEpisode`.
-- Reason: Drafts may come from generated output, so the replacement should be visible and reversible.
-- Consequence: Future apply flows should keep the request and confirm steps separate.
+2026-04-29 - 替换播放器节目之前必须确认
+- 决策：`Apply to player` 在修改 `activeEpisode` 前打开内嵌确认区。
+- 原因：草稿可能来自生成输出，替换动作应该可见、可撤销。
+- 影响：后续应用流程应保持“请求应用”和“确认应用”分离。
+
+2026-04-29 - 项目文档统一使用中文
+- 决策：所有项目文档、记忆文件、任务日志和技能说明的说明性文字使用中文。
+- 原因：用户明确要求所有文档中文重写，且后续文档必须中文。
+- 影响：新增文档前先检查语言；技术标识、命令、路径、API 和代码片段可以保留原文。

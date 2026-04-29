@@ -1,21 +1,21 @@
-# Final Retrospective
+# 最终复盘
 
-Use this file at the end of a project, milestone, or major deliverable.
+在项目结束、里程碑完成或主要交付物完成时使用本文件。
 
-## Template
+## 模板
 
 ```text
-## YYYY-MM-DD - Milestone title
+## YYYY-MM-DD - 里程碑标题
 
-### Outcome
+### 结果
 
-### What worked
+### 有效做法
 
-### What failed or caused delay
+### 问题和延误
 
-### Reusable lessons
+### 可复用经验
 
-### Project-specific preferences
+### 项目特定偏好
 
-### Next-project recommendations
+### 下个项目建议
 ```

@@ -1,23 +1,24 @@
-# Status
+# 项目状态
 
-Last updated: 2026-04-29
+最后更新：2026-04-29
 
-## Project Snapshot
+## 项目概览
 
-- Project: AI radio reproduction inspired by mmguo's Claudio FM.
-- Repository: `https://github.com/windsky922/aidiantai.git`.
-- Local path: `C:\Users\Administrator\Documents\New project 2`.
-- Current focus: Build a local personal AI radio system with Codex/OpenAI as the final AI processor.
+- 项目：复现 mmguo 的 Claudio FM 思路，构建本地个人 AI 电台。
+- 仓库：`https://github.com/windsky922/aidiantai.git`。
+- 本地路径：`C:\Users\Administrator\Documents\New project 2`。
+- 当前重点：以 Codex/OpenAI 作为最终 AI 处理核心，继续完善本地个人 AI 电台系统。
 
-## Current State
+## 当前状态
 
-- Static player, local context API, Codex prompt preview, episode contract validation, draft generation, and provider adapter are implemented.
-- Draft generation defaults to `sample` provider so the app runs without external credentials.
-- OpenAI Responses provider is scaffolded but should only run after `CODEX_DRAFT_PROVIDER=openai` and `OPENAI_API_KEY` are explicitly configured.
-- Settings tab can generate, validate, confirm before applying a draft to the player, restore the previous in-memory episode, and show the resolved Codex provider status.
+- 已实现静态播放器、本地上下文 API、Codex prompt 预览、节目契约校验、草稿生成和 provider 适配层。
+- 草稿生成默认使用 `sample` provider，因此没有外部凭据也能运行。
+- OpenAI Responses provider 已搭好骨架，但只有显式配置 `CODEX_DRAFT_PROVIDER=openai` 和 `OPENAI_API_KEY` 后才应运行。
+- Settings 页面可以生成草稿、校验草稿、应用前确认、恢复上一期内存节目，并显示当前 Codex provider 状态。
+- 项目文档和记忆文件的说明性文字必须使用中文；技术标识、命令、路径和 API 名称可以保留原文。
 
-## Next Steps
+## 下一步
 
-- Add persistent draft history for applied episodes.
-- Add a guarded real OpenAI dry-run flow after the user explicitly configures credentials.
-- Later: connect TTS, music API, weather, schedule, and feedback memory.
+- 增加持久化草稿历史。
+- 在用户显式配置凭据后，增加受保护的真实 OpenAI dry-run 流程。
+- 后续接入 TTS、音乐 API、天气、日程和反馈记忆。

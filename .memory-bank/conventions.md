@@ -1,26 +1,32 @@
-# Conventions
+# 项目约定
 
-## Communication
+## 沟通
 
-- Use Chinese for user-facing discussion unless the user requests otherwise.
-- Keep reports concise and practical.
-- State assumptions and validation limits directly.
+- 除非用户另有要求，面向用户的讨论使用中文。
+- 汇报保持简洁、具体、可执行。
+- 直接说明假设和验证限制。
 
-## Development
+## 开发
 
-- Before each implementation step, inspect current code shape and choose the smallest clean change that preserves behavior.
-- Refactor duplicated logic when it is already increasing maintenance cost.
-- Keep UI, provider selection, validation, and route handling separated.
-- Use Codex/OpenAI as the final AI processor; do not introduce Claude-specific naming, APIs, or copy except when discussing the original reference project.
+- 每次实现前先检查当前代码结构，选择能保持行为稳定的最小清晰改动。
+- 当重复逻辑已经增加维护成本时，进行重构。
+- 保持 UI、provider 选择、校验和路由处理相互分离。
+- 最终 AI 处理核心使用 Codex/OpenAI；除非讨论原始参考项目，不引入 Claude 专属命名、API 或文案。
 
-## Memory
+## 文档
 
-- Use `.memory-bank/` for durable project memory.
-- Do not store secrets, API keys, private tokens, credentials, or unnecessary raw sensitive data.
-- Store reusable facts, decisions, lessons, and next steps, not raw chat logs or command output.
+- 所有项目文档、记忆文件、技能说明和任务日志的说明性文字必须使用中文。
+- 技术标识、命令、路径、API 名称、环境变量和代码片段可以保留原文。
+- 新增或更新文档时，先确认阶段顺序和中文约定，再提交。
 
-## Verification
+## 记忆
 
-- Run `node_modules\\.bin\\tsc.cmd -b` for TypeScript validation.
-- Full `npm run build` may need escalated execution because Vite/esbuild can fail with `spawn EPERM` in the default sandbox.
-- After frontend changes, verify the interface in the in-app browser when practical.
+- 使用 `.memory-bank/` 保存长期项目记忆。
+- 不保存密钥、API key、私有令牌、凭据或不必要的原始敏感数据。
+- 保存可复用事实、决策、教训和下一步，不保存原始聊天记录或命令输出。
+
+## 验证
+
+- 使用 `node_modules\\.bin\\tsc.cmd -b` 做 TypeScript 校验。
+- 完整 `npm run build` 可能需要提升权限，因为 Vite/esbuild 在默认沙箱中可能因 `spawn EPERM` 失败。
+- 前端变更后，在可行时使用内置浏览器验证界面。

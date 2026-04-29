@@ -41,7 +41,7 @@
 
 ## 本地运行
 
-当前已完成阶段 2.2：本地 Node.js API 已能读取用户上下文文件，Profile 页会展示 context 摘要。
+当前已完成到阶段 2.10：本地 Node.js API 已能读取用户上下文文件，Settings 页可生成草稿、展示 provider 状态，并在应用草稿前进行确认。
 
 ```bash
 npm install
@@ -83,12 +83,12 @@ http://127.0.0.1:8787/api/codex/provider-status
 http://127.0.0.1:8787/api/codex/draft
 ```
 
-## Codex draft provider
+## Codex 草稿 provider
 
-`POST /api/codex/draft` defaults to `CODEX_DRAFT_PROVIDER=sample`, so the app runs without external keys.
-`GET /api/codex/provider-status` reports the resolved provider, model, and whether external requests are enabled without exposing secrets.
+`POST /api/codex/draft` 默认使用 `CODEX_DRAFT_PROVIDER=sample`，因此没有外部密钥也能运行。
+`GET /api/codex/provider-status` 会在不暴露密钥的前提下，返回解析后的 provider、模型和外部请求是否启用。
 
-To test the OpenAI Responses adapter, copy `.env.example` to `.env`, set:
+如果要测试 OpenAI Responses 适配层，复制 `.env.example` 为 `.env`，并设置：
 
 ```txt
 CODEX_DRAFT_PROVIDER=openai
@@ -96,7 +96,7 @@ OPENAI_API_KEY=your_key_here
 OPENAI_MODEL=gpt-5.2-codex
 ```
 
-When `openai` is enabled, local taste, routine, mood-rule, and playlist context is sent to the OpenAI Responses API for draft generation.
+启用 `openai` 后，本地音乐品味、作息、情绪规则和歌单上下文会发送到 OpenAI Responses API，用于生成草稿。
 
 ## 当前数据入口
 
@@ -117,7 +117,7 @@ src/data/pilotEpisode.json
 - `public/sw.js`
 - `src/registerServiceWorker.ts`
 
-service worker 使用 network-first 策略，优先拿最新资源，离线时回退到缓存。
+service worker 使用“网络优先”策略，优先获取最新资源，离线时回退到缓存。
 
 ## 用户上下文
 

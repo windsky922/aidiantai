@@ -1,24 +1,24 @@
-# Architecture And Workspace Map
+# 架构与工作区地图
 
-## Stack
+## 技术栈
 
-- Frontend: Vite + React + TypeScript.
-- Backend: local Node.js HTTP server using built-in modules.
-- PWA assets live under `public/`.
-- Local user context lives under `data/`.
+- 前端：Vite + React + TypeScript。
+- 后端：使用 Node.js 内置模块实现的本地 HTTP 服务。
+- PWA 资源位于 `public/`。
+- 本地用户上下文位于 `data/`。
 
-## Key Flow
+## 关键流程
 
-- `data/*` holds taste, routine, mood-rule, and playlist context.
-- `server/context.js` reads local context and builds summaries.
-- `server/codexPrompt.js` builds the structured Codex prompt.
-- `server/codexProvider.js` chooses the draft provider and reports provider readiness without exposing secrets.
-- `server/codexDraft.js` assembles the draft response.
-- `server/episodeContract.js` validates generated output and converts it to frontend `Episode`.
-- `src/components/InfoPanel.tsx` exposes draft generation, apply confirmation, and restore controls in Settings.
-- `src/App.tsx` owns `activeEpisode`, `previousEpisode`, and draft apply confirmation state; confirming a validated draft replaces only the in-memory player episode and enables one-step restore.
+- `data/*` 保存音乐品味、作息、情绪规则和歌单上下文。
+- `server/context.js` 读取本地上下文并生成摘要。
+- `server/codexPrompt.js` 组装结构化 Codex prompt。
+- `server/codexProvider.js` 选择草稿 provider，并在不暴露密钥的前提下报告 provider 就绪状态。
+- `server/codexDraft.js` 编排草稿响应。
+- `server/episodeContract.js` 校验生成结果，并转换为前端 `Episode`。
+- `src/components/InfoPanel.tsx` 在 Settings 页面暴露草稿生成、应用确认和恢复控制。
+- `src/App.tsx` 管理 `activeEpisode`、`previousEpisode` 和草稿应用确认状态；确认后的已校验草稿只替换内存中的播放器节目，并启用一步恢复。
 
-## API Surface
+## API 接口
 
 - `GET /api/episodes/pilot`
 - `GET /api/context`
@@ -32,9 +32,9 @@
 - `GET /api/codex/provider-status`
 - `POST /api/codex/draft`
 
-## Boundaries
+## 边界
 
-- Provider logic must stay out of UI and route handlers.
-- UI can display provider status, but environment-variable interpretation belongs in `server/codexProvider.js`.
-- AI output must pass through JSON schema and `buildEpisodePreview` before player-facing use.
-- Do not let draft generation directly overwrite the active player episode; keep the explicit apply flow.
+- Provider 逻辑不能散落到 UI 或路由处理函数中。
+- UI 可以展示 provider 状态，但环境变量解释必须留在 `server/codexProvider.js`。
+- AI 输出必须先经过 JSON schema 和 `buildEpisodePreview`，再进入播放器可消费的数据结构。
+- 草稿生成不能直接覆盖当前播放器节目，必须保留显式应用流程。

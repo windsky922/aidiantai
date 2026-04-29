@@ -607,3 +607,33 @@ GitHub：
 
 GitHub：
 - 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-29：阶段 2.11 - 文档统一中文化
+
+目标：
+- 将项目文档、记忆文件和项目技能说明的说明性文字统一改为中文。
+- 把“后续文档必须使用中文”的规则写入项目约定。
+- 保留技术标识、命令、路径、API、环境变量和代码片段的原文，避免破坏可执行内容。
+
+实现前判断：
+- `node_modules/` 和临时 `.tmp-skill-memory/` 不属于项目文档维护范围。
+- 需要处理的是 Git 跟踪的 `README.md`、`AGENTS.md`、`.agents/skills/project-memory/SKILL.md`、`.memory-bank/*.md`、`docs/*.md` 和 `data/*.md`。
+- `docs/TASK_LOG.md` 必须继续保持阶段顺序。
+
+操作：
+- 重写 `AGENTS.md` 和 `.agents/skills/project-memory/SKILL.md` 为中文。
+- 重写 `.memory-bank/` 中的状态、架构、约定、决策、进展、经验和复盘模板。
+- 更新 `README.md` 中仍为英文的 provider 说明。
+- 调整 `docs/REPLICATION_PLAN.md` 中剩余英文表述。
+- 在 `.memory-bank/conventions.md`、`.memory-bank/decisions.md` 和 `.memory-bank/lessons.md` 中记录文档语言约定。
+
+验证：
+- 已检查 Git 跟踪文档范围，排除依赖目录和临时目录。
+- 已确认任务日志标题顺序保持为阶段 0 到阶段 2.11。
+
+结论：
+- 后续所有项目文档的说明性文字必须使用中文。
+- 技术名称、命令、API 路径、环境变量和代码片段可以保留原文。
+
+GitHub：
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。

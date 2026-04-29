@@ -1,54 +1,59 @@
-# Lessons
+# 经验教训
 
-Use this file for durable lessons Codex should reuse later.
+本文件记录 Codex 后续应复用的长期经验。
 
-## Format
+## 格式
 
 ```text
-YYYY-MM-DD - Lesson title
-- Context:
-- Lesson:
-- Apply next time:
+YYYY-MM-DD - 经验标题
+- 背景：
+- 经验：
+- 下次应用：
 ```
 
-## Entries
+## 条目
 
-2026-04-27 - Keep task log chronological
-- Context: Stage entries were once inserted before earlier stages.
-- Lesson: Always verify `docs/TASK_LOG.md` heading order after appending a new stage.
-- Apply next time: Keep order as stage 0, 1.1, 1.2, 1.3, 1.4, 2.1, 2.2, 2.2.1, 2.3, 2.4, 2.5, 2.6, then future stages.
+2026-04-27 - 保持任务日志阶段顺序
+- 背景：阶段条目曾经被插入到更早阶段之前。
+- 经验：追加新阶段后，必须检查 `docs/TASK_LOG.md` 的标题顺序。
+- 下次应用：顺序保持为阶段 0、1.1、1.2、1.3、1.4、2.1、2.2、2.2.1、2.3、2.4、2.5、2.6，然后再接后续阶段。
 
-2026-04-27 - Restart stale dev servers before UI validation
-- Context: Browser showed stale draft fields because old processes were still serving ports `5173` and `8787`.
-- Lesson: If UI/API output misses newly added fields, check listening Node processes and restart `npm run dev`.
-- Apply next time: Validate `POST /api/codex/draft` directly before assuming frontend state is wrong.
+2026-04-27 - UI 验证前先排查旧开发服务
+- 背景：浏览器曾显示旧草稿字段，因为旧进程仍占用 `5173` 和 `8787`。
+- 经验：如果 UI/API 输出缺少新增字段，先检查监听中的 Node 进程并重启 `npm run dev`。
+- 下次应用：在判断前端状态错误前，先直接验证 `POST /api/codex/draft`。
 
-2026-04-27 - Use safe sample defaults for external providers
-- Context: Draft provider now supports OpenAI but should not send context unless configured.
-- Lesson: Default to local sample behavior and require explicit provider/key configuration for external calls.
-- Apply next time: New integrations should preserve offline/local demo behavior first.
+2026-04-27 - 外部 provider 使用安全默认值
+- 背景：草稿 provider 已支持 OpenAI，但未配置前不应发送本地上下文。
+- 经验：默认使用本地 sample 行为，外部调用必须要求显式 provider 和 key 配置。
+- 下次应用：新增集成时，先保证离线/本地演示行为稳定。
 
-2026-04-27 - Prefer context-mode for long source review
-- Context: Large source/log reads can overload conversation context.
-- Lesson: Use context-mode indexing and targeted search for long outputs.
-- Apply next time: Use `ctx_batch_execute` for multi-file source review and search summaries.
+2026-04-27 - 长源码审查优先使用 context-mode
+- 背景：大段源码或日志读取会占用过多对话上下文。
+- 经验：长输出使用 context-mode 索引和定向搜索。
+- 下次应用：多文件源码审查和摘要搜索优先使用 context-mode。
 
-2026-04-29 - Reset player state when swapping episodes
-- Context: Draft episodes can now replace the active player episode.
-- Lesson: Audio element refs, speech synthesis, playback state, and timeline state must reset when `songPreview` changes.
-- Apply next time: Any player data-source switch should include lifecycle cleanup in `usePlayerController`.
+2026-04-29 - 切换节目时重置播放器状态
+- 背景：草稿节目现在可以替换当前播放器节目。
+- 经验：`songPreview` 变化时，必须重置音频元素引用、语音合成、播放状态和时间轴状态。
+- 下次应用：任何播放器数据源切换都应在 `usePlayerController` 中包含生命周期清理。
 
-2026-04-29 - Add rollback before persistence
-- Context: Draft application needed a safer recovery path.
-- Lesson: A one-step in-memory restore is a useful checkpoint before designing persistent draft history.
-- Apply next time: Validate reversible UI flows before adding storage or multi-version state.
+2026-04-29 - 持久化前先加入回滚
+- 背景：草稿应用流程需要更安全的恢复路径。
+- 经验：一步内存恢复是设计持久化草稿历史前的有效检查点。
+- 下次应用：加入存储或多版本状态前，先验证可逆 UI 流程。
 
-2026-04-29 - Surface provider state before real calls
-- Context: The app can run sample drafts or OpenAI Responses drafts depending on environment.
-- Lesson: Show the resolved provider and external-request state before users trigger generation.
-- Apply next time: Add status endpoints for integrations before adding irreversible or external actions.
+2026-04-29 - 真实调用前先展示 provider 状态
+- 背景：应用会根据环境运行 sample 草稿或 OpenAI Responses 草稿。
+- 经验：用户触发生成前，应展示解析后的 provider 和外部请求状态。
+- 下次应用：新增集成时，在不可逆或外部动作之前加入状态接口。
 
-2026-04-29 - Keep confirmation panels fully reachable
-- Context: The apply confirmation panel first appeared near the bottom of a scrollable Settings view.
-- Lesson: Inline confirmation UI should scroll into view when opened, especially inside compact mobile layouts.
-- Apply next time: Validate both the state transition and the visible action controls in the browser.
+2026-04-29 - 确认面板必须完整可达
+- 背景：应用确认面板第一次出现在 Settings 滚动区域底部附近。
+- 经验：内嵌确认 UI 打开时应自动滚入视野，尤其是在紧凑移动布局中。
+- 下次应用：浏览器验证时同时检查状态转换和可见操作控件。
+
+2026-04-29 - 文档语言约定需要写入项目记忆
+- 背景：用户要求所有文档中文重写，且后续文档必须中文。
+- 经验：稳定偏好必须写入 `.memory-bank/conventions.md`，并同步到任务日志和技能说明。
+- 下次应用：新增或更新文档时，先确认说明性文字为中文。
