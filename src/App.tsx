@@ -8,6 +8,7 @@ import { PlayerPanel } from './components/PlayerPanel';
 import { Tabs } from './components/Tabs';
 import { useCodexDraft } from './hooks/useCodexDraft';
 import { useCodexEpisodePreview } from './hooks/useCodexEpisodePreview';
+import { useCodexProviderStatus } from './hooks/useCodexProviderStatus';
 import { useCodexPromptSummary } from './hooks/useCodexPromptSummary';
 import { useClock } from './hooks/useClock';
 import { useEpisode } from './hooks/useEpisode';
@@ -58,6 +59,7 @@ function RadioApp({ episode }: RadioAppProps) {
   const contextResource = useRadioContext();
   const promptResource = useCodexPromptSummary();
   const episodePreviewResource = useCodexEpisodePreview();
+  const providerStatusResource = useCodexProviderStatus();
   const codexDraft = useCodexDraft();
   const transcriptRef = useRef<HTMLDivElement | null>(null);
   const player = usePlayerController(activeEpisode);
@@ -84,6 +86,8 @@ function RadioApp({ episode }: RadioAppProps) {
   const promptError = promptResource.status === 'error' ? promptResource.error : null;
   const episodePreview = episodePreviewResource.status === 'ready' ? episodePreviewResource.data : null;
   const episodePreviewError = episodePreviewResource.status === 'error' ? episodePreviewResource.error : null;
+  const providerStatus = providerStatusResource.status === 'ready' ? providerStatusResource.data : null;
+  const providerStatusError = providerStatusResource.status === 'error' ? providerStatusResource.error : null;
 
   return (
     <AppStage>
@@ -110,6 +114,8 @@ function RadioApp({ episode }: RadioAppProps) {
             promptError={promptError}
             episodePreview={episodePreview}
             episodePreviewError={episodePreviewError}
+            providerStatus={providerStatus}
+            providerStatusError={providerStatusError}
             codexDraft={codexDraft.draft}
             activeEpisodeTitle={activeEpisode.title}
             canRestoreEpisode={Boolean(previousEpisode)}

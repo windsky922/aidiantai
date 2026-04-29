@@ -529,4 +529,43 @@ GitHub：
 - 后续如果需要多草稿、多版本或跨刷新保存，应单独设计 draft history，而不是继续堆在当前组件状态里。
 
 GitHub：
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-29：阶段 2.9 - Codex provider 状态展示
+
+目标：
+- 在 Settings 页面展示当前 draft provider 的真实状态。
+- 明确区分本地 `sample` dry-run 和真实 OpenAI Responses 调用。
+- 在不暴露密钥的前提下，让用户知道是否会发生外部请求。
+
+实现前判断：
+- provider 选择规则已经集中在 `server/codexProvider.js`，不应该让前端重复判断环境变量。
+- 最小实现是新增只读状态接口，前端通过 hook 消费并展示。
+- 当前阶段不触发真实 OpenAI 请求，只展示配置是否就绪。
+
+操作：
+- 修改 `server/codexProvider.js`，新增 `getCodexProviderStatus()`。
+- 修改 `server/index.js`，新增 `GET /api/codex/provider-status`。
+- 新增 `src/hooks/useCodexProviderStatus.ts`。
+- 修改 `src/types.ts` 和 `src/config.ts`，补齐 provider status 类型和 endpoint。
+- 修改 `src/App.tsx` 和 `src/components/InfoPanel.tsx`，Settings 展示 provider、model、状态说明和 external requests。
+- 修改 `README.md`，补充 provider status API。
+- 更新 `.memory-bank/` 项目记忆。
+
+验证：
+- `node_modules\\.bin\\tsc.cmd -b` 成功。
+- 默认 provider 模块验证返回 `provider=sample`、`externalRequests=false`。
+- `CODEX_DRAFT_PROVIDER=openai` 且未配置 `OPENAI_API_KEY` 时，状态返回 `ok=false` 且不会启用外部请求。
+- 非法 provider 状态返回 `source=unsupported`。
+- `npm run build` 在默认沙箱下仍因 esbuild `spawn EPERM` 失败；提升权限后完整构建成功。
+- 本地开发服务验证成功：
+  - `http://127.0.0.1:8787/api/codex/provider-status` 返回 200。
+  - `http://127.0.0.1:5173/` 返回 200。
+- 内置浏览器检查成功：Settings 页面显示 `Provider: sample.` 和 `External requests: disabled.`。
+
+结论：
+- 用户现在可以在生成 draft 前看见当前 provider 状态。
+- OpenAI 真实调用仍保持显式配置边界，不会在默认状态发送本地上下文。
+
+GitHub：
 - 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。

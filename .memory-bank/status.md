@@ -14,10 +14,10 @@ Last updated: 2026-04-29
 - Static player, local context API, Codex prompt preview, episode contract validation, draft generation, and provider adapter are implemented.
 - Draft generation defaults to `sample` provider so the app runs without external credentials.
 - OpenAI Responses provider is scaffolded but should only run after `CODEX_DRAFT_PROVIDER=openai` and `OPENAI_API_KEY` are explicitly configured.
-- Settings tab can generate, validate, explicitly apply a draft to the player, and restore the previous in-memory episode.
+- Settings tab can generate, validate, explicitly apply a draft to the player, restore the previous in-memory episode, and show the resolved Codex provider status.
 
 ## Next Steps
 
 - Add confirmation or persistent draft history for applied episodes.
-- Add provider health/status display before attempting real OpenAI calls.
+- Add a guarded real OpenAI dry-run flow after the user explicitly configures credentials.
 - Later: connect TTS, music API, weather, schedule, and feedback memory.

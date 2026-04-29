@@ -79,12 +79,14 @@ http://127.0.0.1:8787/api/codex/schema
 http://127.0.0.1:8787/api/codex/json-schema
 http://127.0.0.1:8787/api/codex/sample-output
 http://127.0.0.1:8787/api/codex/episode-preview
+http://127.0.0.1:8787/api/codex/provider-status
 http://127.0.0.1:8787/api/codex/draft
 ```
 
 ## Codex draft provider
 
 `POST /api/codex/draft` defaults to `CODEX_DRAFT_PROVIDER=sample`, so the app runs without external keys.
+`GET /api/codex/provider-status` reports the resolved provider, model, and whether external requests are enabled without exposing secrets.
 
 To test the OpenAI Responses adapter, copy `.env.example` to `.env`, set:
 

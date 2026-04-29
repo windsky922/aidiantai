@@ -42,3 +42,8 @@ YYYY-MM-DD - Decision title
 - Decision: Restore support is currently one-step and in-memory only.
 - Reason: It verifies the UX without introducing persistence or version-history complexity.
 - Consequence: Persistent draft history should be designed separately if needed.
+
+2026-04-29 - Keep provider readiness on the server
+- Decision: Provider status and environment-variable checks live in `server/codexProvider.js`.
+- Reason: The UI should not duplicate backend provider selection rules or risk exposing secrets.
+- Consequence: New provider configuration checks should extend `/api/codex/provider-status`.

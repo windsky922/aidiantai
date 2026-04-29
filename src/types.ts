@@ -83,3 +83,17 @@ export type CodexDraft = {
   };
   preview: CodexEpisodePreview;
 };
+
+export type CodexProviderStatus = {
+  ok: boolean;
+  provider: string;
+  configuredProvider: string;
+  source: string;
+  model: string | null;
+  externalRequests: boolean;
+  requirements: {
+    name: string;
+    ok: boolean;
+  }[];
+  message: string;
+};

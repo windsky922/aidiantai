@@ -10,6 +10,39 @@ const providerFromEnv = () => {
   return process.env.OPENAI_API_KEY ? 'openai' : 'sample';
 };
 
+export const getCodexProviderStatus = () => {
+  const configuredProvider = (process.env.CODEX_DRAFT_PROVIDER || 'auto').trim().toLowerCase();
+  const supportedProvider = ['auto', 'sample', 'openai'].includes(configuredProvider);
+  const provider = supportedProvider ? providerFromEnv() : configuredProvider;
+  const hasApiKey = Boolean(process.env.OPENAI_API_KEY);
+  const usesOpenAI = provider === 'openai';
+  const ok = supportedProvider && (!usesOpenAI || hasApiKey);
+
+  return {
+    ok,
+    provider,
+    configuredProvider,
+    source: supportedProvider ? (usesOpenAI ? 'openai-responses' : 'sample-output') : 'unsupported',
+    model: usesOpenAI ? process.env.OPENAI_MODEL || DEFAULT_MODEL : null,
+    externalRequests: usesOpenAI && ok,
+    requirements: usesOpenAI
+      ? [
+          {
+            name: 'OPENAI_API_KEY',
+            ok: hasApiKey,
+          },
+        ]
+      : [],
+    message: ok
+      ? usesOpenAI
+        ? 'OpenAI Responses provider is ready.'
+        : 'Sample provider is active; no external request will be sent.'
+      : supportedProvider
+        ? 'OPENAI_API_KEY is required before using the OpenAI provider.'
+        : `Unsupported CODEX_DRAFT_PROVIDER: ${configuredProvider}`,
+  };
+};
+
 const extractResponseText = (response) => {
   if (typeof response.output_text === 'string') return response.output_text;
 

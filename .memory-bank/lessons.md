@@ -42,3 +42,8 @@ YYYY-MM-DD - Lesson title
 - Context: Draft application needed a safer recovery path.
 - Lesson: A one-step in-memory restore is a useful checkpoint before designing persistent draft history.
 - Apply next time: Validate reversible UI flows before adding storage or multi-version state.
+
+2026-04-29 - Surface provider state before real calls
+- Context: The app can run sample drafts or OpenAI Responses drafts depending on environment.
+- Lesson: Show the resolved provider and external-request state before users trigger generation.
+- Apply next time: Add status endpoints for integrations before adding irreversible or external actions.

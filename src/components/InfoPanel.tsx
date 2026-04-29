@@ -1,5 +1,12 @@
 import type { ActionResource } from '../lib/api';
-import type { CodexDraft, CodexEpisodePreview, CodexPromptSummary, RadioContext, TabId } from '../types';
+import type {
+  CodexDraft,
+  CodexEpisodePreview,
+  CodexPromptSummary,
+  CodexProviderStatus,
+  RadioContext,
+  TabId,
+} from '../types';
 
 type InfoPanelProps = {
   activeTab: Exclude<TabId, 'player'>;
@@ -9,6 +16,8 @@ type InfoPanelProps = {
   promptError: string | null;
   episodePreview: CodexEpisodePreview | null;
   episodePreviewError: string | null;
+  providerStatus: CodexProviderStatus | null;
+  providerStatusError: string | null;
   codexDraft: ActionResource<CodexDraft>;
   activeEpisodeTitle: string;
   canRestoreEpisode: boolean;
@@ -49,6 +58,8 @@ const promptItems = (
   promptError: string | null,
   episodePreview: CodexEpisodePreview | null,
   episodePreviewError: string | null,
+  providerStatus: CodexProviderStatus | null,
+  providerStatusError: string | null,
   codexDraft: ActionResource<CodexDraft>,
   activeEpisodeTitle: string,
 ) => {
@@ -57,11 +68,16 @@ const promptItems = (
   if (episodePreviewError) return [`Codex episode preview API error: ${episodePreviewError}`];
   if (!episodePreview) return ['Loading Codex episode preview from /api/codex/episode-preview.'];
   if (!episodePreview.ok) return [`Preview validation failed: ${episodePreview.errors.join('; ')}`];
+  if (providerStatusError) return [`Codex provider status API error: ${providerStatusError}`];
+  if (!providerStatus) return ['Loading Codex provider status from /api/codex/provider-status.'];
 
   const items = [
     `Target: ${promptSummary.target}.`,
     `Task: ${promptSummary.task}`,
     `${promptSummary.instructionCount} instructions and ${promptSummary.candidateSongCount} candidate songs prepared.`,
+    `Provider: ${providerStatus.provider}${providerStatus.model ? ` (${providerStatus.model})` : ''}.`,
+    `Provider status: ${providerStatus.message}`,
+    `External requests: ${providerStatus.externalRequests ? 'enabled' : 'disabled'}.`,
     `Player episode: ${activeEpisodeTitle}.`,
     `Preview episode: ${episodePreview.episode.title}, ${episodePreview.episode.turns.length} turns.`,
     `Selected song: ${episodePreview.selectedSong.title} - ${episodePreview.selectedSong.artist}.`,
@@ -96,6 +112,8 @@ export function InfoPanel({
   promptError,
   episodePreview,
   episodePreviewError,
+  providerStatus,
+  providerStatusError,
   codexDraft,
   activeEpisodeTitle,
   canRestoreEpisode,
@@ -107,7 +125,16 @@ export function InfoPanel({
   const items =
     activeTab === 'profile'
       ? contextItems(radioContext, contextError)
-      : promptItems(promptSummary, promptError, episodePreview, episodePreviewError, codexDraft, activeEpisodeTitle);
+      : promptItems(
+          promptSummary,
+          promptError,
+          episodePreview,
+          episodePreviewError,
+          providerStatus,
+          providerStatusError,
+          codexDraft,
+          activeEpisodeTitle,
+        );
 
   return (
     <section className="panel info-panel">

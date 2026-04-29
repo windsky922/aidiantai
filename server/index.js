@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { readContext } from './context.js';
 import { buildCodexDraft } from './codexDraft.js';
 import { buildCodexPrompt, buildCodexPromptSummary } from './codexPrompt.js';
+import { getCodexProviderStatus } from './codexProvider.js';
 import {
   buildEpisodePreview,
   codexEpisodeJsonSchema,
@@ -53,6 +54,7 @@ const getRoutes = {
   '/api/codex/json-schema': async () => codexEpisodeJsonSchema,
   '/api/codex/sample-output': readCodexSampleOutput,
   '/api/codex/episode-preview': async () => buildEpisodePreview(await readCodexSampleOutput()),
+  '/api/codex/provider-status': async () => getCodexProviderStatus(),
 };
 
 const postRoutes = {
