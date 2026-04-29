@@ -55,6 +55,7 @@ function RadioApp({ episode }: RadioAppProps) {
   const [activeTab, setActiveTab] = useState<TabId>('player');
   const [activeEpisode, setActiveEpisode] = useState(episode);
   const [previousEpisode, setPreviousEpisode] = useState<Episode | null>(null);
+  const [isConfirmingDraftApply, setIsConfirmingDraftApply] = useState(false);
   const clock = useClock();
   const contextResource = useRadioContext();
   const promptResource = useCodexPromptSummary();
@@ -66,18 +67,35 @@ function RadioApp({ episode }: RadioAppProps) {
 
   useTranscriptScroll(activeEpisode, player.time, transcriptRef);
 
-  const applyDraftToPlayer = () => {
+  const changeTab = (tab: TabId) => {
+    if (tab !== 'settings') setIsConfirmingDraftApply(false);
+    setActiveTab(tab);
+  };
+
+  const generateDraft = () => {
+    setIsConfirmingDraftApply(false);
+    codexDraft.generateDraft();
+  };
+
+  const requestDraftApply = () => {
+    if (codexDraft.draft.status !== 'ready' || !codexDraft.draft.data.preview.ok) return;
+    setIsConfirmingDraftApply(true);
+  };
+
+  const confirmDraftApply = () => {
     if (codexDraft.draft.status !== 'ready' || !codexDraft.draft.data.preview.ok) return;
     setPreviousEpisode(activeEpisode);
     setActiveEpisode(codexDraft.draft.data.preview.episode);
-    setActiveTab('player');
+    setIsConfirmingDraftApply(false);
+    changeTab('player');
   };
 
   const restorePreviousEpisode = () => {
     if (!previousEpisode) return;
     setActiveEpisode(previousEpisode);
     setPreviousEpisode(null);
-    setActiveTab('player');
+    setIsConfirmingDraftApply(false);
+    changeTab('player');
   };
 
   const radioContext = contextResource.status === 'ready' ? contextResource.data : null;
@@ -92,7 +110,7 @@ function RadioApp({ episode }: RadioAppProps) {
   return (
     <AppStage>
       <section className="device" aria-label="Claudio FM player">
-        <Tabs activeTab={activeTab} onChange={setActiveTab} />
+        <Tabs activeTab={activeTab} onChange={changeTab} />
         <PlayerHeader host={activeEpisode.host} isPlaying={player.isPlaying} clock={clock} canvasRef={player.canvasRef} />
 
         {activeTab === 'player' ? (
@@ -119,8 +137,11 @@ function RadioApp({ episode }: RadioAppProps) {
             codexDraft={codexDraft.draft}
             activeEpisodeTitle={activeEpisode.title}
             canRestoreEpisode={Boolean(previousEpisode)}
-            onGenerateDraft={codexDraft.generateDraft}
-            onApplyDraft={applyDraftToPlayer}
+            isConfirmingDraftApply={isConfirmingDraftApply}
+            onGenerateDraft={generateDraft}
+            onRequestDraftApply={requestDraftApply}
+            onConfirmDraftApply={confirmDraftApply}
+            onCancelDraftApply={() => setIsConfirmingDraftApply(false)}
             onRestoreEpisode={restorePreviousEpisode}
           />
         )}

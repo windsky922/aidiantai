@@ -15,8 +15,8 @@
 - `server/codexProvider.js` chooses the draft provider and reports provider readiness without exposing secrets.
 - `server/codexDraft.js` assembles the draft response.
 - `server/episodeContract.js` validates generated output and converts it to frontend `Episode`.
-- `src/components/InfoPanel.tsx` exposes draft generation and explicit draft application in Settings.
-- `src/App.tsx` owns `activeEpisode` and `previousEpisode`; applying a validated draft replaces only the in-memory player episode and enables one-step restore.
+- `src/components/InfoPanel.tsx` exposes draft generation, apply confirmation, and restore controls in Settings.
+- `src/App.tsx` owns `activeEpisode`, `previousEpisode`, and draft apply confirmation state; confirming a validated draft replaces only the in-memory player episode and enables one-step restore.
 
 ## API Surface
 

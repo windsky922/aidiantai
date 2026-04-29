@@ -47,3 +47,8 @@ YYYY-MM-DD - Lesson title
 - Context: The app can run sample drafts or OpenAI Responses drafts depending on environment.
 - Lesson: Show the resolved provider and external-request state before users trigger generation.
 - Apply next time: Add status endpoints for integrations before adding irreversible or external actions.
+
+2026-04-29 - Keep confirmation panels fully reachable
+- Context: The apply confirmation panel first appeared near the bottom of a scrollable Settings view.
+- Lesson: Inline confirmation UI should scroll into view when opened, especially inside compact mobile layouts.
+- Apply next time: Validate both the state transition and the visible action controls in the browser.

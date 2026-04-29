@@ -462,7 +462,7 @@ GitHub：
 - 真实 OpenAI 调用的输出会先经过 JSON schema 约束，再经过 `buildEpisodePreview` 校验。
 
 GitHub：
-- 待提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
 
 ## 2026-04-29：阶段 2.7 - 已校验 draft 应用到播放器
 
@@ -566,6 +566,44 @@ GitHub：
 结论：
 - 用户现在可以在生成 draft 前看见当前 provider 状态。
 - OpenAI 真实调用仍保持显式配置边界，不会在默认状态发送本地上下文。
+
+GitHub：
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+
+## 2026-04-29：阶段 2.10 - 应用 draft 前确认
+
+目标：
+- 给 `Apply to player` 增加二次确认。
+- 保持 draft 替换播放器前的显式用户动作。
+- 确认区必须在移动尺寸中可见、可点击，不遮挡已有内容。
+
+实现前判断：
+- 当前 `App.tsx` 已经管理 `activeEpisode` 和 `previousEpisode`，确认状态也应保留在这里。
+- `InfoPanel` 只负责展示确认 UI 和触发回调，不负责改写播放器数据。
+- 不需要新增后端接口或持久化，先完成会话内确认体验。
+
+操作：
+- 修改 `src/App.tsx`，新增 `isConfirmingDraftApply` 状态。
+- 将原 `Apply to player` 拆分为 `requestDraftApply` 和 `confirmDraftApply`。
+- 切换离开 Settings、重新生成 draft、恢复 previous 时会清理确认状态。
+- 修改 `src/components/InfoPanel.tsx`，新增内嵌确认区、Cancel 和 Confirm 按钮。
+- 确认区打开时自动 `scrollIntoView`，避免在紧凑视口中被截断。
+- 修改 `src/styles.css`，增加确认区和紧凑按钮样式。
+
+验证：
+- `node_modules\\.bin\\tsc.cmd -b` 成功。
+- `npm run build` 在默认沙箱下仍因 esbuild `spawn EPERM` 失败；提升权限后完整构建成功。
+- 本地开发服务验证成功：
+  - `http://127.0.0.1:5173/` 返回 200。
+  - `http://127.0.0.1:8787/api/health` 返回 200。
+- 内置浏览器检查成功：
+  - `Generate draft` 后显示 draft 摘要。
+  - 点击 `Apply to player` 后仍停留在 Settings，并显示 `confirm replace`。
+  - 点击 `Confirm` 后才切回 Player，并显示 `Late Night Pilot`。
+
+结论：
+- draft 替换播放器现在具备“请求应用 -> 确认应用”的显式流程。
+- 下一步更适合做 persistent draft history，而不是继续增加临时状态。
 
 GitHub：
 - 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。

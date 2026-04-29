@@ -8,4 +8,5 @@
 - Added a safe `Apply to player` flow from validated draft to active player episode.
 - Added one-step in-memory `Restore previous` for applied drafts.
 - Added `/api/codex/provider-status` and Settings provider status display.
-- Next useful implementation step: add confirmation or persistent draft history around applied episodes, then a guarded OpenAI dry-run.
+- Added a confirmation step before applying a validated draft to the player.
+- Next useful implementation step: add persistent draft history around applied episodes, then a guarded OpenAI dry-run.

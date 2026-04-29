@@ -47,3 +47,8 @@ YYYY-MM-DD - Decision title
 - Decision: Provider status and environment-variable checks live in `server/codexProvider.js`.
 - Reason: The UI should not duplicate backend provider selection rules or risk exposing secrets.
 - Consequence: New provider configuration checks should extend `/api/codex/provider-status`.
+
+2026-04-29 - Confirm before replacing the player episode
+- Decision: `Apply to player` opens an inline confirmation before changing `activeEpisode`.
+- Reason: Drafts may come from generated output, so the replacement should be visible and reversible.
+- Consequence: Future apply flows should keep the request and confirm steps separate.

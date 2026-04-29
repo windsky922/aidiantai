@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import type { ActionResource } from '../lib/api';
 import type {
   CodexDraft,
@@ -21,8 +22,11 @@ type InfoPanelProps = {
   codexDraft: ActionResource<CodexDraft>;
   activeEpisodeTitle: string;
   canRestoreEpisode: boolean;
+  isConfirmingDraftApply: boolean;
   onGenerateDraft: () => void;
-  onApplyDraft: () => void;
+  onRequestDraftApply: () => void;
+  onConfirmDraftApply: () => void;
+  onCancelDraftApply: () => void;
   onRestoreEpisode: () => void;
 };
 
@@ -117,10 +121,14 @@ export function InfoPanel({
   codexDraft,
   activeEpisodeTitle,
   canRestoreEpisode,
+  isConfirmingDraftApply,
   onGenerateDraft,
-  onApplyDraft,
+  onRequestDraftApply,
+  onConfirmDraftApply,
+  onCancelDraftApply,
   onRestoreEpisode,
 }: InfoPanelProps) {
+  const confirmationRef = useRef<HTMLDivElement | null>(null);
   const content = copy[activeTab];
   const items =
     activeTab === 'profile'
@@ -135,6 +143,14 @@ export function InfoPanel({
           codexDraft,
           activeEpisodeTitle,
         );
+
+  useEffect(() => {
+    if (!isConfirmingDraftApply) return;
+    confirmationRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+    });
+  }, [isConfirmingDraftApply]);
 
   return (
     <section className="panel info-panel">
@@ -159,10 +175,38 @@ export function InfoPanel({
             className="draft-button secondary"
             type="button"
             disabled={codexDraft.status !== 'ready' || !codexDraft.data.preview.ok}
-            onClick={onApplyDraft}
+            onClick={onRequestDraftApply}
           >
             Apply to player
           </button>
+          {isConfirmingDraftApply && codexDraft.status === 'ready' && codexDraft.data.preview.ok && (
+            <div
+              className="draft-confirmation"
+              ref={confirmationRef}
+              role="group"
+              aria-label="Confirm draft application"
+            >
+              <p className="eyebrow">confirm replace</p>
+              <strong>
+                {activeEpisodeTitle}
+                {' -> '}
+                {codexDraft.data.preview.episode.title}
+              </strong>
+              <p>
+                {codexDraft.data.provider}
+                {codexDraft.data.model ? ` (${codexDraft.data.model})` : ''} draft,{' '}
+                {codexDraft.data.preview.episode.turns.length} turns.
+              </p>
+              <div className="draft-confirmation-actions">
+                <button className="draft-button secondary compact" type="button" onClick={onCancelDraftApply}>
+                  Cancel
+                </button>
+                <button className="draft-button compact" type="button" onClick={onConfirmDraftApply}>
+                  Confirm
+                </button>
+              </div>
+            </div>
+          )}
           <button
             className="draft-button secondary"
             type="button"

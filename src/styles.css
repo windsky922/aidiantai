@@ -366,6 +366,38 @@ input {
   color: #11131a;
 }
 
+.draft-button.compact {
+  height: 38px;
+}
+
+.draft-confirmation {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid rgba(17, 19, 26, 0.12);
+  border-radius: 10px;
+  background: rgba(17, 19, 26, 0.04);
+}
+
+.draft-confirmation strong {
+  color: #19191d;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.draft-confirmation p {
+  margin: 0;
+  color: #5b5961;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.draft-confirmation-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
 .error-copy {
   margin: 20px 0 0;
   padding: 14px;
