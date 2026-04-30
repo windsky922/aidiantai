@@ -57,6 +57,7 @@ function RadioApp({ episode }: RadioAppProps) {
   const [activeEpisode, setActiveEpisode] = useState(episode);
   const [previousEpisode, setPreviousEpisode] = useState<Episode | null>(null);
   const [isConfirmingDraftApply, setIsConfirmingDraftApply] = useState(false);
+  const [isConfirmingExternalDraftGeneration, setIsConfirmingExternalDraftGeneration] = useState(false);
   const clock = useClock();
   const contextResource = useRadioContext();
   const promptResource = useCodexPromptSummary();
@@ -70,18 +71,34 @@ function RadioApp({ episode }: RadioAppProps) {
   useTranscriptScroll(activeEpisode, player.time, transcriptRef);
 
   const changeTab = (tab: TabId) => {
-    if (tab !== 'settings') setIsConfirmingDraftApply(false);
+    if (tab !== 'settings') {
+      setIsConfirmingDraftApply(false);
+      setIsConfirmingExternalDraftGeneration(false);
+    }
     setActiveTab(tab);
   };
 
-  const generateDraft = async () => {
+  const runDraftGeneration = async () => {
     setIsConfirmingDraftApply(false);
+    setIsConfirmingExternalDraftGeneration(false);
     const draft = await codexDraft.generateDraft();
     if (draft) draftHistory.saveDraft(draft);
   };
 
+  const generateDraft = () => {
+    if (!providerStatus?.ok) return;
+    if (providerStatus.externalRequests) {
+      setIsConfirmingDraftApply(false);
+      setIsConfirmingExternalDraftGeneration(true);
+      return;
+    }
+
+    runDraftGeneration();
+  };
+
   const selectHistoryDraft = (draft: CodexDraft) => {
     setIsConfirmingDraftApply(false);
+    setIsConfirmingExternalDraftGeneration(false);
     codexDraft.selectDraft(draft);
   };
 
@@ -147,7 +164,10 @@ function RadioApp({ episode }: RadioAppProps) {
             activeEpisodeTitle={activeEpisode.title}
             canRestoreEpisode={Boolean(previousEpisode)}
             isConfirmingDraftApply={isConfirmingDraftApply}
+            isConfirmingExternalDraftGeneration={isConfirmingExternalDraftGeneration}
             onGenerateDraft={generateDraft}
+            onConfirmExternalDraftGeneration={runDraftGeneration}
+            onCancelExternalDraftGeneration={() => setIsConfirmingExternalDraftGeneration(false)}
             onSelectHistoryDraft={selectHistoryDraft}
             onRequestDraftApply={requestDraftApply}
             onConfirmDraftApply={confirmDraftApply}

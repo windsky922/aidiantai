@@ -87,6 +87,7 @@ http://127.0.0.1:8787/api/codex/draft
 
 `POST /api/codex/draft` 默认使用 `CODEX_DRAFT_PROVIDER=sample`，因此没有外部密钥也能运行。
 `GET /api/codex/provider-status` 会在不暴露密钥的前提下，返回解析后的 provider、模型和外部请求是否启用。
+Settings 页面会根据 provider 状态保护生成流程：provider 未就绪时禁用生成；如果会产生外部请求，会先要求确认。
 
 如果要测试 OpenAI Responses 适配层，复制 `.env.example` 为 `.env`，并设置：
 

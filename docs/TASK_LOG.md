@@ -674,3 +674,37 @@ GitHub：
 
 GitHub：
 - 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+## 2026-04-30：阶段 2.13 - OpenAI 草稿生成触发保护
+
+目标：
+- 在真实 OpenAI dry-run 之前，先保护草稿生成触发点。
+- provider 未就绪时禁止生成草稿。
+- provider 会产生外部请求时，必须先在 Settings 页面确认，再调用 `/api/codex/draft`。
+
+实现前判断：
+- 后端已经通过 `/api/codex/provider-status` 返回 provider 是否可用、是否会产生外部请求。
+- 当前阶段不实际发送本地上下文到 OpenAI，只实现并验证触发保护。
+- 真实外部调用会发送本地 taste、routine、mood-rule 和 playlist 上下文，必须保持明确确认边界。
+
+操作：
+- 修改 `src/App.tsx`，新增外部草稿生成确认状态。
+- `Generate draft` 在 provider 未就绪时直接返回，在 `externalRequests=true` 时先打开确认区。
+- 修改 `src/components/InfoPanel.tsx`，provider 未就绪时显示 blocked 状态，外部请求启用时显示确认区。
+- 保持默认 `sample` provider 路径不弹外部请求确认。
+- 更新 `README.md` 和 `.memory-bank/` 中文项目记忆。
+
+验证：
+- `node_modules\\.bin\\tsc.cmd -b` 成功。
+- `npm run build` 在默认沙箱下仍因 esbuild `spawn EPERM` 失败；提升权限后完整构建成功。
+- `CODEX_DRAFT_PROVIDER=openai` 且未配置 `OPENAI_API_KEY` 时，provider 状态返回 `ok=false`、`externalRequests=false`。
+- 本地开发服务验证成功：
+  - `http://127.0.0.1:5173/` 返回 200。
+  - `http://127.0.0.1:8787/api/health` 返回 200。
+- 内置浏览器检查成功：默认 `sample` provider 下 `Generate draft` 可用，生成草稿成功，且不会出现 `external request` 确认区。
+
+结论：
+- 草稿生成入口现在具备 OpenAI 外部请求保护边界。
+- 下一步需要用户显式配置 OpenAI 凭据后，才能实际验证真实 OpenAI dry-run。
+
+GitHub：
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。

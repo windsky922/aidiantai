@@ -15,10 +15,11 @@
 - 草稿生成默认使用 `sample` provider，因此没有外部凭据也能运行。
 - OpenAI Responses provider 已搭好骨架，但只有显式配置 `CODEX_DRAFT_PROVIDER=openai` 和 `OPENAI_API_KEY` 后才应运行。
 - Settings 页面可以生成草稿、校验草稿、应用前确认、恢复上一期内存节目、显示当前 Codex provider 状态，并在浏览器本地保存最近 5 条草稿历史。
+- 生成草稿前会检查 provider 状态；provider 未就绪时禁用生成，provider 会产生外部请求时需要先确认。
 - 项目文档和记忆文件的说明性文字必须使用中文；技术标识、命令、路径和 API 名称可以保留原文。
 
 ## 下一步
 
-- 在用户显式配置凭据后，增加受保护的真实 OpenAI dry-run 流程。
+- 在用户显式配置凭据后，实际验证真实 OpenAI dry-run 的返回结构和错误处理。
 - 后续可将草稿历史从浏览器 `localStorage` 升级为本地服务端存储。
 - 后续接入 TTS、音乐 API、天气、日程和反馈记忆。

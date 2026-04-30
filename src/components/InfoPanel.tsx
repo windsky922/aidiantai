@@ -24,7 +24,10 @@ type InfoPanelProps = {
   activeEpisodeTitle: string;
   canRestoreEpisode: boolean;
   isConfirmingDraftApply: boolean;
+  isConfirmingExternalDraftGeneration: boolean;
   onGenerateDraft: () => void;
+  onConfirmExternalDraftGeneration: () => void;
+  onCancelExternalDraftGeneration: () => void;
   onSelectHistoryDraft: (draft: CodexDraft) => void;
   onRequestDraftApply: () => void;
   onConfirmDraftApply: () => void;
@@ -137,7 +140,10 @@ export function InfoPanel({
   activeEpisodeTitle,
   canRestoreEpisode,
   isConfirmingDraftApply,
+  isConfirmingExternalDraftGeneration,
   onGenerateDraft,
+  onConfirmExternalDraftGeneration,
+  onCancelExternalDraftGeneration,
   onSelectHistoryDraft,
   onRequestDraftApply,
   onConfirmDraftApply,
@@ -182,11 +188,36 @@ export function InfoPanel({
           <button
             className={`draft-button ${codexDraft.status === 'loading' ? 'loading' : ''}`}
             type="button"
-            disabled={codexDraft.status === 'loading'}
+            disabled={codexDraft.status === 'loading' || providerStatus?.ok !== true}
             onClick={onGenerateDraft}
           >
             {codexDraft.status === 'loading' ? 'Generating...' : 'Generate draft'}
           </button>
+          {providerStatus && !providerStatus.ok && (
+            <div className="draft-confirmation" role="status">
+              <p className="eyebrow">provider blocked</p>
+              <strong>{providerStatus.provider}</strong>
+              <p>{providerStatus.message}</p>
+            </div>
+          )}
+          {isConfirmingExternalDraftGeneration && providerStatus?.externalRequests && (
+            <div className="draft-confirmation" role="group" aria-label="Confirm external draft generation">
+              <p className="eyebrow">external request</p>
+              <strong>
+                {providerStatus.provider}
+                {providerStatus.model ? ` (${providerStatus.model})` : ''}
+              </strong>
+              <p>Local taste, routine, mood-rule, and playlist context will be sent for draft generation.</p>
+              <div className="draft-confirmation-actions">
+                <button className="draft-button secondary compact" type="button" onClick={onCancelExternalDraftGeneration}>
+                  Cancel
+                </button>
+                <button className="draft-button compact" type="button" onClick={onConfirmExternalDraftGeneration}>
+                  Continue
+                </button>
+              </div>
+            </div>
+          )}
           <button
             className="draft-button secondary"
             type="button"
