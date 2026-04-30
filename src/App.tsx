@@ -11,11 +11,12 @@ import { useCodexEpisodePreview } from './hooks/useCodexEpisodePreview';
 import { useCodexProviderStatus } from './hooks/useCodexProviderStatus';
 import { useCodexPromptSummary } from './hooks/useCodexPromptSummary';
 import { useClock } from './hooks/useClock';
+import { useDraftHistory } from './hooks/useDraftHistory';
 import { useEpisode } from './hooks/useEpisode';
 import { usePlayerController } from './hooks/usePlayerController';
 import { useRadioContext } from './hooks/useRadioContext';
 import { useTranscriptScroll } from './hooks/useTranscriptScroll';
-import type { Episode, RadioContext, TabId } from './types';
+import type { CodexDraft, Episode, TabId } from './types';
 
 export function App() {
   const episodeResource = useEpisode();
@@ -62,6 +63,7 @@ function RadioApp({ episode }: RadioAppProps) {
   const episodePreviewResource = useCodexEpisodePreview();
   const providerStatusResource = useCodexProviderStatus();
   const codexDraft = useCodexDraft();
+  const draftHistory = useDraftHistory();
   const transcriptRef = useRef<HTMLDivElement | null>(null);
   const player = usePlayerController(activeEpisode);
 
@@ -72,9 +74,15 @@ function RadioApp({ episode }: RadioAppProps) {
     setActiveTab(tab);
   };
 
-  const generateDraft = () => {
+  const generateDraft = async () => {
     setIsConfirmingDraftApply(false);
-    codexDraft.generateDraft();
+    const draft = await codexDraft.generateDraft();
+    if (draft) draftHistory.saveDraft(draft);
+  };
+
+  const selectHistoryDraft = (draft: CodexDraft) => {
+    setIsConfirmingDraftApply(false);
+    codexDraft.selectDraft(draft);
   };
 
   const requestDraftApply = () => {
@@ -135,10 +143,12 @@ function RadioApp({ episode }: RadioAppProps) {
             providerStatus={providerStatus}
             providerStatusError={providerStatusError}
             codexDraft={codexDraft.draft}
+            draftHistory={draftHistory.draftHistory}
             activeEpisodeTitle={activeEpisode.title}
             canRestoreEpisode={Boolean(previousEpisode)}
             isConfirmingDraftApply={isConfirmingDraftApply}
             onGenerateDraft={generateDraft}
+            onSelectHistoryDraft={selectHistoryDraft}
             onRequestDraftApply={requestDraftApply}
             onConfirmDraftApply={confirmDraftApply}
             onCancelDraftApply={() => setIsConfirmingDraftApply(false)}

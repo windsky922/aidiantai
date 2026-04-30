@@ -11,20 +11,31 @@ export function useCodexDraft() {
     setDraft({ status: 'loading' });
 
     try {
+      const data = await postJson<CodexDraft>(API_ENDPOINTS.codexDraft);
       setDraft({
         status: 'ready',
-        data: await postJson<CodexDraft>(API_ENDPOINTS.codexDraft),
+        data,
       });
+      return data;
     } catch (error) {
       setDraft({
         status: 'error',
         error: getErrorMessage(error, 'Unable to generate Codex draft.'),
       });
+      return null;
     }
+  }, []);
+
+  const selectDraft = useCallback((data: CodexDraft) => {
+    setDraft({
+      status: 'ready',
+      data,
+    });
   }, []);
 
   return {
     draft,
     generateDraft,
+    selectDraft,
   };
 }

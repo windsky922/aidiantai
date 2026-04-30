@@ -20,10 +20,12 @@ type InfoPanelProps = {
   providerStatus: CodexProviderStatus | null;
   providerStatusError: string | null;
   codexDraft: ActionResource<CodexDraft>;
+  draftHistory: CodexDraft[];
   activeEpisodeTitle: string;
   canRestoreEpisode: boolean;
   isConfirmingDraftApply: boolean;
   onGenerateDraft: () => void;
+  onSelectHistoryDraft: (draft: CodexDraft) => void;
   onRequestDraftApply: () => void;
   onConfirmDraftApply: () => void;
   onCancelDraftApply: () => void;
@@ -108,6 +110,18 @@ const promptItems = (
   return items;
 };
 
+const formatDraftTime = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Unknown time';
+
+  return new Intl.DateTimeFormat('zh-CN', {
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+};
+
 export function InfoPanel({
   activeTab,
   radioContext,
@@ -119,10 +133,12 @@ export function InfoPanel({
   providerStatus,
   providerStatusError,
   codexDraft,
+  draftHistory,
   activeEpisodeTitle,
   canRestoreEpisode,
   isConfirmingDraftApply,
   onGenerateDraft,
+  onSelectHistoryDraft,
   onRequestDraftApply,
   onConfirmDraftApply,
   onCancelDraftApply,
@@ -215,6 +231,29 @@ export function InfoPanel({
           >
             Restore previous
           </button>
+          {draftHistory.length > 0 && (
+            <section className="draft-history" aria-label="Draft history">
+              <p className="eyebrow">draft history</p>
+              {draftHistory.map((draft) => {
+                const title = draft.preview.ok ? draft.preview.episode.title : 'Invalid draft';
+                const turnCount = draft.preview.ok ? draft.preview.episode.turns.length : 0;
+
+                return (
+                  <button
+                    className="draft-history-item"
+                    key={draft.generatedAt}
+                    type="button"
+                    onClick={() => onSelectHistoryDraft(draft)}
+                  >
+                    <span>{title}</span>
+                    <small>
+                      {formatDraftTime(draft.generatedAt)} · {draft.provider} · {turnCount} turns
+                    </small>
+                  </button>
+                );
+              })}
+            </section>
+          )}
         </div>
       )}
     </section>

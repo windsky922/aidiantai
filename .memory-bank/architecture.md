@@ -17,6 +17,7 @@
 - `server/episodeContract.js` 校验生成结果，并转换为前端 `Episode`。
 - `src/components/InfoPanel.tsx` 在 Settings 页面暴露草稿生成、应用确认和恢复控制。
 - `src/App.tsx` 管理 `activeEpisode`、`previousEpisode` 和草稿应用确认状态；确认后的已校验草稿只替换内存中的播放器节目，并启用一步恢复。
+- `src/hooks/useDraftHistory.ts` 使用浏览器 `localStorage` 保存最近 5 条已校验草稿历史，不经过后端写入。
 
 ## API 接口
 
@@ -38,3 +39,4 @@
 - UI 可以展示 provider 状态，但环境变量解释必须留在 `server/codexProvider.js`。
 - AI 输出必须先经过 JSON schema 和 `buildEpisodePreview`，再进入播放器可消费的数据结构。
 - 草稿生成不能直接覆盖当前播放器节目，必须保留显式应用流程。
+- 当前草稿历史是浏览器本地持久化，不是跨设备或服务端历史。

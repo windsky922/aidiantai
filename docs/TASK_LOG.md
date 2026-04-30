@@ -637,3 +637,40 @@ GitHub：
 
 GitHub：
 - 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
+## 2026-04-30：阶段 2.12 - 浏览器本地草稿历史
+
+目标：
+- 让已校验草稿在刷新页面后仍可找回。
+- 保留最近 5 条草稿历史，避免 Settings 页面无限增长。
+- 不新增后端写文件接口，先验证最小持久化体验。
+
+实现前判断：
+- 当前 `useCodexDraft` 只保存当前草稿，需要让生成结果可返回，并允许历史草稿重新设为当前草稿。
+- 当前阶段不做删除历史，避免引入本地删除确认和数据管理复杂度。
+- 使用浏览器 `localStorage` 足以验证单浏览器持久化，后续再决定是否升级为服务端本地文件存储。
+
+操作：
+- 修改 `src/hooks/useCodexDraft.ts`，让 `generateDraft()` 返回生成结果，并新增 `selectDraft()`。
+- 新增 `src/hooks/useDraftHistory.ts`，使用 `localStorage` 保存最近 5 条已校验草稿。
+- 修改 `src/App.tsx`，生成草稿成功后写入历史，并支持从历史恢复为当前草稿。
+- 修改 `src/components/InfoPanel.tsx`，Settings 页面展示 `draft history` 列表。
+- 修改 `src/styles.css`，增加草稿历史条目的稳定布局样式。
+- 更新 `README.md` 和 `.memory-bank/` 中文项目记忆。
+
+验证：
+- `node_modules\\.bin\\tsc.cmd -b` 成功。
+- `npm run build` 在默认沙箱下仍因 esbuild `spawn EPERM` 失败；提升权限后完整构建成功。
+- 本地开发服务验证成功：
+  - `http://127.0.0.1:5173/` 返回 200。
+  - `http://127.0.0.1:8787/api/health` 返回 200。
+- 内置浏览器检查成功：
+  - `Generate draft` 后显示 `draft history`。
+  - 刷新页面后历史仍然存在。
+  - 点击历史条目后，历史草稿会重新成为当前草稿，并显示 `Draft episode: Late Night Pilot`。
+
+结论：
+- 草稿现在具备单浏览器持久化历史能力。
+- 下一步可以做受保护的 OpenAI dry-run，或将历史升级为服务端本地文件存储。
+
+GitHub：
+- 已提交并推送到 `https://github.com/windsky922/aidiantai.git`。
